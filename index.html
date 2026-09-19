@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Lichess Markdown Studio — editor de biografías de equipos para Lichess.">
+<title>Lichess Markdown Studio</title>
+<link rel="icon" type="image/png" href="logo.png">
+
+<style>
+:root{
+  --bg:#f7f9fc; --surface:#fff; --surface-2:#eef3fa;
+  --fg:#0f172a; --muted:#64748b;
+  --border:#e2e8f0; --border-strong:#cbd5e1;
+  --blue-300:#93c5fd; --blue-400:#60a5fa; --blue-600:#2563eb;
+  --blue-700:#1d4ed8; --blue-100:#dbeafe; --red:#dc2626;
+  --amber:#f59e0b; --amber-soft:#fef3c7; --amber-dark:#92400e;
+  --green:#16a34a; --green-soft:#dcfce7;
+  --accent:var(--blue-600); --accent-hover:var(--blue-700);
+  --accent-soft:var(--blue-100);
+  --radius:8px; --radius-sm:5px;
+  --shadow:0 1px 2px rgba(15,23,42,.05);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#0b1220; --surface:#131c2e; --surface-2:#1c2740;
+  --fg:#e2e8f0; --muted:#94a3b8;
+  --border:#1f2a44; --border-strong:#33415c;
+  --accent:var(--blue-400); --accent-hover:var(--blue-300);
+  --accent-soft:rgba(96,165,250,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.35);
+  --amber-soft:rgba(245,158,11,.15); --amber-dark:#fbbf24;
+}
+[data-theme="blue"]{
+  --bg:#1e40af; --surface:#1d4ed8; --surface-2:#2563eb;
+  --fg:#eff6ff; --muted:#bfdbfe;
+  --border:#3b82f6; --border-strong:#60a5fa;
+  --accent:#bfdbfe; --accent-hover:#dbeafe;
+  --accent-soft:rgba(191,219,254,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.25);
+}
+[data-theme="blue"] .output{background:rgba(15,23,42,.28);}
+[data-theme="blue"] .toolbar{background:rgba(15,23,42,.22);}
+[data-theme="blue"] .brand-box{background:rgba(255,255,255,.08);}
+[data-theme="blue"] .editor-overlay{background:rgba(30,64,175,.55);}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:var(--font);font-size:15px;background:var(--bg);color:var(--fg);
+  line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s;}
+a{color:var(--accent);}
+::selection{background:var(--accent-soft);color:var(--fg);}
+
+header{position:sticky;top:0;z-index:50;background:var(--bg);
+  border-bottom:1px solid var(--border);padding:18px 24px;}
+.bar{max-width:880px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;}
+.brand{display:flex;align-items:center;gap:20px;
+  font-weight:600;font-size:1.35rem;letter-spacing:-.01em;
+  text-decoration:none;color:inherit;
+  padding:8px 14px 8px 8px;border-radius:16px;
+  transition:background .15s;}
+.brand:hover{background:var(--surface-2);}
+
+.brand-box{
+  width:140px;height:140px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--surface);
+  border:2px solid var(--border-strong);
+  border-radius:24px;
+  flex-shrink:0;padding:16px;
+  box-shadow:0 2px 6px rgba(15,23,42,.06);
+  transition:border-color .2s,transform .15s,background .2s,box-shadow .2s;
+}
+.brand:hover .brand-box{
+  border-color:var(--accent);transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(15,23,42,.12);
+}
+.brand-mark{width:100%;height:100%;object-fit:contain;display:block;border-radius:12px;}
+.brand-fallback{width:100%;height:100%;
+  background:var(--accent);color:#fff;border-radius:12px;
+  display:none;align-items:center;justify-content:center;}
+.brand-fallback svg{width:64px;height:64px;}
+
+.brand-text{font-size:1.35rem;line-height:1.2;max-width:260px;}
+.brand-text small{display:block;font-size:.82rem;font-weight:400;
+  color:var(--muted);letter-spacing:.02em;margin-top:4px;}
+.controls{display:flex;gap:8px;align-items:center;}
+
+button{display:inline-flex;align-items:center;gap:7px;font-family:inherit;
+  font-size:.85rem;font-weight:500;padding:7px 12px;
+  border:1px solid var(--border-strong);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--fg);cursor:pointer;
+  transition:background .15s,border-color .15s,color .15s,transform .05s;}
+button:hover{background:var(--surface-2);border-color:var(--accent);}
+button:active{transform:scale(.97);}
+button:disabled{opacity:.45;cursor:not-allowed;}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg);}
+button.primary:hover:not(:disabled){background:var(--accent-hover);border-color:var(--accent-hover);}
+button.icon-only{padding:6px;width:34px;height:34px;justify-content:center;}
+button.heading-btn{padding:6px 10px;font-family:var(--mono);font-weight:700;font-size:.78rem;letter-spacing:.02em;}
+.icon{width:16px;height:16px;flex-shrink:0;}
+
+select,input[type=text],textarea{font-family:inherit;font-size:.88rem;
+  padding:8px 11px;border:1px solid var(--border-strong);
+  border-radius:var(--radius-sm);background:var(--surface);color:var(--fg);
+  width:100%;transition:border-color .15s,box-shadow .15s;}
+select{cursor:pointer;width:auto;}
+textarea{font-family:var(--mono);font-size:.85rem;resize:vertical;line-height:1.55;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);}
+input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.15);}
+.hint{display:block;margin-top:6px;font-size:.72rem;color:var(--muted);}
+.hint.error-msg{color:var(--red);}
+.hint.success-msg{color:var(--green);}
+
+main{max-width:880px;margin:0 auto;padding:32px 24px 96px;}
+h1{font-size:1.55rem;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px;line-height:1.25;}
+p.lead{color:var(--muted);margin:0 0 8px;font-size:.95rem;max-width:60ch;}
+h2{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;margin:56px 0 14px;
+  display:flex;align-items:center;gap:10px;}
+h2::before{content:"";width:4px;height:18px;background:var(--accent);
+  border-radius:2px;flex-shrink:0;}
+h2:first-of-type{margin-top:32px;}
+
+.card{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);}
+.card + .card{margin-top:10px;}
+
+label{display:block;font-size:.75rem;font-weight:500;color:var(--muted);
+  letter-spacing:.02em;margin-bottom:6px;}
+label:not(:first-child){margin-top:14px;}
+label .req{color:var(--red);margin-left:3px;}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:680px){.grid2{grid-template-columns:1fr;}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+
+.output{font-family:var(--mono);font-size:.85rem;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px 14px;min-height:96px;white-space:pre-wrap;word-break:break-word;
+  background:var(--surface-2);color:var(--fg);line-height:1.55;transition:background .2s;}
+.output:empty::before,
+.output[data-empty="true"]::before{content:"—";color:var(--muted);}
+.muted{color:var(--muted);font-size:.85rem;margin:0 0 14px;}
+
+.editor-wrap{position:relative;margin-top:6px;}
+.toolbar{display:flex;flex-wrap:wrap;gap:3px;align-items:center;
+  padding:6px;background:var(--surface-2);border:1px solid var(--border-strong);
+  border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;
+  transition:background .2s,opacity .2s;}
+.toolbar.locked{opacity:.4;pointer-events:none;}
+.toolbar .sep{width:1px;height:20px;background:var(--border-strong);margin:0 4px;}
+
+#bioEditor{min-height:240px;padding:18px 20px;border:1px solid var(--border-strong);
+  border-top:none;border-radius:0 0 var(--radius) var(--radius);
+  background:var(--surface);outline:none;font-size:.95rem;line-height:1.65;
+  transition:border-color .15s,box-shadow .15s,background .2s,opacity .2s,filter .2s;}
+#bioEditor:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+#bioEditor.locked{opacity:.55;filter:blur(.4px);cursor:not-allowed;pointer-events:none;}
+#bioEditor h1{font-size:1.4rem;font-weight:700;margin:.6em 0 .3em;display:block;padding:0;border:none;}
+#bioEditor h2{font-size:1.2rem;font-weight:600;margin:.6em 0 .3em;display:block;padding:0;border:none;}
+#bioEditor h2::before{content:none;}
+#bioEditor h3{font-size:1.05rem;font-weight:600;margin:.5em 0 .3em;}
+#bioEditor h4{font-size:1rem;font-weight:600;margin:.5em 0 .3em;}
+#bioEditor h5{font-size:.95rem;font-weight:600;margin:.5em 0 .3em;color:var(--muted);}
+#bioEditor h6{font-size:.9rem;font-weight:600;margin:.5em 0 .3em;color:var(--muted);}
+#bioEditor blockquote{border-left:3px solid var(--accent);margin:.6em 0;
+  padding:2px 14px;color:var(--muted);}
+#bioEditor ul,#bioEditor ol{margin:.4em 0 .4em 1.4em;padding:0;}
+
+.editor-overlay{
+  position:absolute;inset:0;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(247,249,252,.5);
+  backdrop-filter:blur(2px);
+  border-radius:0 0 var(--radius) var(--radius);
+  cursor:pointer;z-index:5;
+}
+[data-theme="dark"] .editor-overlay{background:rgba(11,18,32,.5);}
+.editor-overlay.show{display:flex;}
+.editor-overlay .lock-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 18px;border-radius:999px;
+  background:var(--amber-soft);color:var(--amber-dark);
+  font-size:.82rem;font-weight:600;
+  border:1px solid var(--amber);
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
+}
+.editor-overlay .lock-badge svg{width:16px;height:16px;}
+
+.banner{
+  display:none;margin:14px 0 0;padding:14px 16px;
+  border-radius:var(--radius);
+  background:var(--amber-soft);
+  border:1px solid var(--amber);
+  color:var(--amber-dark);
+  font-size:.85rem;line-height:1.55;
+}
+.banner.show{display:block;animation:bannerIn .25s ease-out;}
+@keyframes bannerIn{
+  from{opacity:0;transform:translateY(-6px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.banner .banner-head{
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;margin-bottom:6px;
+}
+.banner .banner-head svg{width:16px;height:16px;flex-shrink:0;}
+.banner .banner-body{font-weight:400;}
+.banner .banner-arrow{
+  display:block;margin-top:10px;
+  font-size:.78rem;font-weight:600;
+}
+.banner .banner-arrow svg{
+  width:14px;height:14px;
+  vertical-align:middle;margin-right:4px;
+  animation:bounceUp 1.1s ease-in-out infinite;
+}
+@keyframes bounceUp{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-3px);}
+}
+
+.field-highlight{
+  outline:2px solid var(--amber);
+  outline-offset:2px;
+  border-color:var(--amber) !important;
+  box-shadow:0 0 0 4px var(--amber-soft) !important;
+  border-radius:var(--radius-sm);
+  animation:pulseField 1.4s ease-in-out 2;
+}
+@keyframes pulseField{
+  0%,100%{box-shadow:0 0 0 4px var(--amber-soft) !important;}
+  50%{box-shadow:0 0 0 8px var(--amber-soft) !important;}
+}
+
+.char-counter{
+  display:flex;align-items:center;gap:8px;
+  margin-top:8px;font-size:.72rem;color:var(--muted);
+}
+.char-counter .bar{
+  flex:1;height:4px;background:var(--surface-2);
+  border-radius:99px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.char-counter .bar > span{
+  display:block;height:100%;width:0;
+  background:var(--amber);
+  transition:width .25s,background .25s;
+}
+.char-counter.ok .bar > span{background:var(--green);}
+.char-counter .num{font-variant-numeric:tabular-nums;font-weight:600;}
+.char-counter.warn .bar > span{background:var(--red);}
+
+.rendered{
+  font-family:var(--font);font-size:.95rem;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:20px 22px;min-height:120px;
+  background:var(--surface);color:var(--fg);
+  line-height:1.65;
+}
+.rendered:empty::before{
+  content:"—";
+  color:var(--muted);
+  font-family:var(--mono);
+  font-size:.85rem;
+}
+.rendered h1{font-size:1.5rem;font-weight:700;margin:.6em 0 .3em;padding:0;border:none;line-height:1.25;}
+.rendered h1::before{content:none;}
+.rendered h2{font-size:1.25rem;font-weight:600;margin:.6em 0 .3em;display:block;
+  padding:0;border:none;}
+.rendered h2::before{content:none;}
+.rendered h3{font-size:1.1rem;font-weight:600;margin:.5em 0 .3em;}
+.rendered h4{font-size:1rem;font-weight:600;margin:.5em 0 .3em;}
+.rendered h5{font-size:.95rem;font-weight:600;margin:.5em 0 .3em;color:var(--muted);}
+.rendered h6{font-size:.9rem;font-weight:600;margin:.5em 0 .3em;color:var(--muted);}
+.rendered p{margin:.4em 0;}
+.rendered blockquote{border-left:3px solid var(--accent);
+  margin:.6em 0;padding:4px 14px;color:var(--muted);}
+.rendered ul,.rendered ol{margin:.4em 0 .4em 1.4em;padding:0;}
+.rendered li{margin:.15em 0;}
+.rendered hr{border:none;border-top:1px solid var(--border-strong);margin:1em 0;}
+.rendered code{font-family:var(--mono);font-size:.85em;
+  background:var(--surface-2);padding:2px 6px;border-radius:4px;color:var(--fg);}
+.rendered a{color:var(--accent);text-decoration:underline;}
+.rendered b,.rendered strong{font-weight:700;}
+.rendered i,.rendered em{font-style:italic;}
+.rendered s,.rendered del{text-decoration:line-through;}
+
+.faq{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);margin:8px 0;overflow:hidden;transition:border-color .15s,background .2s;}
+.faq[open]{border-color:var(--border-strong);}
+.faq summary{list-style:none;cursor:pointer;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;font-weight:500;
+  font-size:.92rem;user-select:none;transition:background .15s;}
+.faq summary:hover{background:var(--surface-2);}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary .num{display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;color:var(--muted);flex-shrink:0;}
+.faq[open] summary .num{color:var(--accent);}
+.faq summary .num svg{width:16px;height:16px;}
+.faq summary .title{flex:1;text-align:left;}
+.faq summary .chev{color:var(--muted);transition:transform .2s,color .15s;flex-shrink:0;}
+.faq[open] summary .chev{transform:rotate(90deg);color:var(--accent);}
+.faq .body{padding:0 18px 16px 60px;color:var(--muted);font-size:.88rem;line-height:1.65;}
+.faq .body code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);
+  padding:1px 5px;border-radius:3px;color:var(--fg);}
+.anchor{font-family:var(--mono);font-size:.7rem;color:var(--muted);
+  border:1px solid var(--border);border-radius:4px;padding:2px 7px;
+  cursor:pointer;transition:all .15s;flex-shrink:0;white-space:nowrap;}
+.anchor:hover{color:var(--accent);border-color:var(--accent);}
+
+.diagram{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:10px;margin:18px 0 14px;padding:26px 16px;
+  background:var(--surface-2);border-radius:var(--radius);
+}
+.d-piece{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;}
+.d-piece .shape{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:14px 20px;border-radius:14px;
+  border:2px solid var(--accent);
+  background:var(--surface);color:var(--accent);
+  font-family:var(--mono);font-weight:800;font-size:1.15rem;
+  min-width:80px;min-height:60px;
+  box-shadow:0 3px 10px rgba(0,0,0,.06);
+  transition:transform .2s,box-shadow .2s;
+  position:relative;
+}
+.d-piece:hover .shape{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.12);}
+.d-piece .shape.filled{background:var(--accent);color:var(--bg);}
+.d-piece .shape.soft{background:var(--accent-soft);color:var(--accent);}
+.d-piece .label{
+  font-size:.7rem;color:var(--muted);
+  text-align:center;line-height:1.35;max-width:120px;
+}
+.d-piece .label em{
+  display:block;font-style:normal;font-weight:700;
+  color:var(--fg);font-size:.75rem;margin-bottom:2px;
+}
+.d-link{width:36px;height:22px;position:relative;flex-shrink:0;}
+.d-link::before{
+  content:"";position:absolute;left:0;right:10px;top:50%;
+  height:2px;background:var(--accent);
+  transform:translateY(-50%);border-radius:1px;
+  background-image:repeating-linear-gradient(90deg,var(--accent) 0 4px,transparent 4px 8px);
+  background-size:8px 2px;
+  animation:slideLine 1.4s linear infinite;
+}
+@keyframes slideLine{
+  from{background-position:0 0;}
+  to{background-position:8px 0;}
+}
+.d-link::after{
+  content:"";position:absolute;right:2px;top:50%;
+  width:0;height:0;transform:translateY(-50%);
+  border-left:8px solid var(--accent);
+  border-top:5px solid transparent;border-bottom:5px solid transparent;
+}
+.d-result-box{
+  margin:18px auto 0;max-width:380px;
+  padding:16px 20px;border-radius:14px;
+  background:var(--surface);
+  border:1px dashed var(--accent);
+  text-align:center;
+  font-family:var(--mono);font-size:.85rem;
+  color:var(--muted);
+}
+.d-result-box .row-inline{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:10px;flex-wrap:wrap;
+}
+.d-result-box code{
+  background:var(--surface-2);padding:5px 12px;border-radius:6px;
+  color:var(--fg);font-weight:700;font-size:.9rem;
+}
+.d-result-box .arrow-soft{color:var(--accent);font-weight:700;font-size:1.1rem;}
+.d-result-box .final-emoji{
+  font-size:1.8rem;line-height:1;display:inline-block;
+  animation:pop 1.2s ease-in-out infinite;
+}
+@keyframes pop{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.18);}
+}
+@media(max-width:620px){
+  .diagram{flex-direction:column;gap:6px;padding:20px 12px;}
+  .d-link{width:22px;height:30px;transform:rotate(90deg);}
+}
+
+.md-table-wrap{margin:14px 0;overflow-x:auto;border:1px solid var(--border);
+  border-radius:var(--radius-sm);}
+.md-table{width:100%;border-collapse:collapse;font-size:.85rem;
+  background:var(--surface);min-width:520px;}
+.md-table th,.md-table td{padding:10px 14px;text-align:left;
+  border-bottom:1px solid var(--border);vertical-align:middle;}
+.md-table th{background:var(--surface-2);font-weight:600;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+.md-table tr:last-child td{border-bottom:none;}
+.md-table td:first-child{white-space:nowrap;color:var(--fg);font-weight:500;}
+.md-table code{font-family:var(--mono);font-size:.85em;
+  background:var(--surface-2);padding:2px 6px;border-radius:4px;
+  color:var(--fg);white-space:pre;}
+.md-render{display:block;color:var(--fg);}
+.md-render h2{font-size:1.05rem;font-weight:700;margin:0;border:none;padding:0;display:block;}
+.md-render h2::before{content:none;}
+.md-render h3{font-size:.98rem;font-weight:700;margin:0;}
+.md-render h4{font-size:.92rem;font-weight:700;margin:0;}
+.md-render h5{font-size:.88rem;font-weight:700;margin:0;}
+.md-render h6{font-size:.85rem;font-weight:700;margin:0;color:var(--muted);}
+.md-render blockquote{border-left:3px solid var(--accent);padding:2px 10px;
+  margin:0;color:var(--muted);font-size:.9em;}
+.md-render ul,.md-render ol{margin:0;padding-left:20px;}
+.md-render hr{border:none;border-top:1px solid var(--border-strong);margin:4px 0;}
+.md-render a{text-decoration:underline;}
+
+footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;
+  color:var(--muted);font-size:.8rem;line-height:1.7;}
+footer .footer-brand{display:block;font-weight:600;color:var(--fg);
+  font-size:.9rem;margin-bottom:4px;}
+footer .footer-disclaimer{display:block;font-size:.78rem;opacity:.75;}
+
+footer .footer-links{
+  display:flex;flex-wrap:wrap;gap:14px;
+  justify-content:center;align-items:center;
+  margin-top:14px;
+}
+footer .footer-links a{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--accent);font-weight:600;text-decoration:none;
+  font-size:.82rem;
+  padding:6px 12px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  transition:background .15s,border-color .15s,color .15s;
+}
+footer .footer-links a:hover{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  text-decoration:none;
+}
+footer .footer-links a svg{width:14px;height:14px;flex-shrink:0;}
+
+footer .footer-credit{
+  display:block;margin-top:14px;
+  font-size:.82rem;color:var(--fg);
+}
+footer .footer-credit a{color:var(--accent);font-weight:600;text-decoration:none;}
+footer .footer-credit a:hover{text-decoration:underline;}
+
+.toast{position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--fg);color:var(--bg);padding:9px 18px;border-radius:999px;
+  font-size:.82rem;font-weight:500;opacity:0;
+  transition:opacity .2s,transform .25s;pointer-events:none;z-index:99;
+  box-shadow:0 4px 16px rgba(0,0,0,.15);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:720px){
+  .brand-box{width:100px;height:100px;padding:12px;border-radius:18px;}
+  .brand-fallback svg{width:44px;height:44px;}
+  .brand-text{font-size:1.05rem;max-width:200px;}
+}
+@media(max-width:520px){
+  .bar{flex-wrap:wrap;}
+  .brand-box{width:80px;height:80px;padding:8px;border-radius:14px;}
+  .brand-fallback svg{width:34px;height:34px;}
+  .brand-text{font-size:.9rem;max-width:150px;}
+  .brand-text small{font-size:.65rem;}
+  .controls{width:100%;justify-content:flex-end;}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-knight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M17 4l-8 8 8 8"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5s7 8 7 13a7 7 0 1 1-14 0c0-5 7-13 7-13z"/></symbol>
+    <symbol id="i-bold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></symbol>
+    <symbol id="i-italic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></symbol>
+    <symbol id="i-ul" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-ol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1.5v4M4 10h2"/><path d="M4 14h2l-2 3h2"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 6C4.8 6 3 7.8 3 10v8h6v-6H6c0-1.1.9-2 2-2V6zm10 0c-2.2 0-4 1.8-4 4v8h6v-6h-3c0-1.1.9-2 2-2V6z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M6 4l14 8-14 8z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17h14"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 21h14"/><path d="M6 8l-3 6h6z"/><path d="M18 8l-3 6h6z"/><path d="M6 8l6-2 6 2"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5 3.3 9.3 7.8 10.8.6.1.8-.3.8-.6v-2c-3.2.7-3.8-1.4-3.8-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.8-5.8 7.8-10.8C23.5 5.7 18.3.5 12 .5z"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="bar">
+    <a href="#top" class="brand" id="top">
+      <span class="brand-box">
+        <img src="logo.png" alt="" class="brand-mark" id="brandLogo"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <span class="brand-fallback"><svg viewBox="0 0 24 24"><use href="#i-knight"/></svg></span>
+      </span>
+      <span class="brand-text">
+        <span data-i18n="brand">Lichess Markdown Studio</span>
+        <small data-i18n="brandSub">Team bio · Markdown</small>
+      </span>
+    </a>
+    <div class="controls">
+      <select id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="pt">Português</option>
+      </select>
+      <button id="themeBtn" class="icon-only" type="button" aria-label="Toggle theme">
+        <svg class="icon"><use href="#i-moon" id="themeIcon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <h1 data-i18n="h1">Team biography editor for Lichess</h1>
+  <p class="lead" data-i18n="lead">Write your team bio. Insert emojis with your keyboard; on export they become HTML entities. Headings export as ##.</p>
+
+  <h2 id="editor" data-i18n="editorTitle">Editor</h2>
+
+  <div class="card">
+    <label data-i18n="labelTeamName">Team name <span class="req">*</span></label>
+    <input type="text" id="teamName" placeholder="e.g. Spanish Knights" autocomplete="off" maxlength="30">
+    <span class="hint" id="teamHint" data-i18n="teamHint">Required. Between 3 and 30 characters.</span>
+
+    <label style="margin-top:20px" data-i18n="labelBio">Biography</label>
+
+    <div class="editor-wrap">
+      <div class="toolbar locked" id="toolbar">
+        <button type="button" class="icon-only" data-cmd="bold" title="Bold"><svg class="icon"><use href="#i-bold"/></svg></button>
+        <button type="button" class="icon-only" data-cmd="italic" title="Italic"><svg class="icon"><use href="#i-italic"/></svg></button>
+        <span class="sep"></span>
+        <button type="button" class="heading-btn" data-block="h2" title="Heading 2">H2</button>
+        <button type="button" class="heading-btn" data-block="h3" title="Heading 3">H3</button>
+        <button type="button" class="heading-btn" data-block="h4" title="Heading 4">H4</button>
+        <button type="button" class="heading-btn" data-block="h5" title="Heading 5">H5</button>
+        <button type="button" class="heading-btn" data-block="h6" title="Heading 6">H6</button>
+        <span class="sep"></span>
+        <button type="button" class="icon-only" data-cmd="insertUnorderedList" title="Bullet list"><svg class="icon"><use href="#i-ul"/></svg></button>
+        <button type="button" class="icon-only" data-cmd="insertOrderedList" title="Numbered list"><svg class="icon"><use href="#i-ol"/></svg></button>
+        <button type="button" class="icon-only" data-block="blockquote" title="Quote"><svg class="icon"><use href="#i-quote"/></svg></button>
+      </div>
+      <div id="bioEditor" contenteditable="true" spellcheck="false">
+        <h2>Team description</h2>
+        <p>We are a friendly club for <b>classical</b> and <i>blitz</i> players.</p>
+        <h2>Rules</h2>
+        <ul><li>Play fair.</li><li>Respect everyone.</li></ul>
+      </div>
+      <div class="editor-overlay" id="editorOverlay">
+        <span class="lock-badge">
+          <svg><use href="#i-lock"/></svg>
+          <span data-i18n="lockBadge">Fill in the team name to edit</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="char-counter" id="charCounter">
+      <span class="num" id="charNum">0</span>
+      <span data-i18n="charMin">/ 30 min</span>
+      <span class="bar"><span id="charBar"></span></span>
+      <span class="num" id="charMax">0</span>
+      <span data-i18n="charMaxLbl">/ 2000 max</span>
+    </div>
+
+    <div class="banner" id="banner">
+      <div class="banner-head">
+        <svg><use href="#i-info"/></svg>
+        <span data-i18n="bannerTitle">Team name required</span>
+      </div>
+      <div class="banner-body" data-i18n="bannerBody">Please fill in the team name field above before you can edit the biography.</div>
+      <span class="banner-arrow">
+        <svg><use href="#i-arrow-up"/></svg>
+        <span data-i18n="bannerArrow">The field is highlighted</span>
+      </span>
+    </div>
+
+    <div class="row">
+      <button type="button" class="primary" id="exportBtn" onclick="onExportClick()" disabled>
+        <svg class="icon"><use href="#i-pen"/></svg>
+        <span data-i18n="btnExport">Export markdown</span>
+      </button>
+      <button type="button" onclick="copyMd()">
+        <svg class="icon"><use href="#i-copy"/></svg>
+        <span data-i18n="btnCopyMd">Copy</span>
+      </button>
+      <button type="button" id="downloadBtn" onclick="downloadMd()" disabled>
+        <svg class="icon"><use href="#i-download"/></svg>
+        <span data-i18n="btnDownload">Download .md</span>
+      </button>
+      <button type="button" onclick="loadExample()">
+        <svg class="icon"><use href="#i-refresh"/></svg>
+        <span data-i18n="btnExample">Example</span>
+      </button>
+      <button type="button" onclick="clearEditor()">
+        <svg class="icon"><use href="#i-trash"/></svg>
+        <span data-i18n="btnClear">Clear</span>
+      </button>
+    </div>
+
+    <label style="margin-top:20px" data-i18n="labelMd">Exported markdown</label>
+    <div class="output" id="mdOut" data-empty="true"></div>
+  </div>
+
+  <h2 id="converter" data-i18n="converterTitle">Converter</h2>
+  <div class="card">
+    <div class="grid2">
+      <div>
+        <label data-i18n="labelEmoji">Emojis (one or many)</label>
+        <textarea id="emojiIn" rows="3" placeholder="😀 🎉 ♟️"></textarea>
+        <div class="row">
+          <button type="button" onclick="emojiToDecimal()">
+            <svg class="icon"><use href="#i-arrow-right"/></svg>
+            <span data-i18n="btnToDec">To HTML entity</span>
+          </button>
+        </div>
+      </div>
+      <div>
+        <label data-i18n="labelDec">HTML entities</label>
+        <textarea id="decIn" rows="3" placeholder="&#128512; &#127881; &#9823;"></textarea>
+        <div class="row">
+          <button type="button" onclick="decimalToEmoji()">
+            <svg class="icon"><use href="#i-arrow-right"/></svg>
+            <span data-i18n="btnToEmoji">To emoji</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <label style="margin-top:20px" data-i18n="labelOut">Output</label>
+    <div class="output" id="out" data-empty="true"></div>
+    <div class="row">
+      <button type="button" onclick="copyOut()">
+        <svg class="icon"><use href="#i-copy"/></svg>
+        <span data-i18n="btnCopy">Copy</span>
+      </button>
+      <button type="button" onclick="clearAll()">
+        <svg class="icon"><use href="#i-trash"/></svg>
+        <span data-i18n="btnClearAll">Clear</span>
+      </button>
+    </div>
+  </div>
+
+  <h2 id="test" data-i18n="testTitle">Preview area</h2>
+  <div class="card">
+    <p class="muted" data-i18n="testHint">Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.</p>
+
+    <label data-i18n="labelPreviewInput">Bio source (markdown + entities)</label>
+    <textarea id="previewIn" rows="8">## Team description
+
+We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
+
+### Rules
+
+- Play fair.
+- Respect everyone.
+
+> Chess is a game, not a war.
+
+---
+
+[Visit Lichess](https://lichess.org)</textarea>
+
+    <label style="margin-top:20px" data-i18n="labelPreviewRender">Rendered preview</label>
+    <div class="rendered" id="previewOut"></div>
+  </div>
+
+  <h2 id="faq" data-i18n="faqTitle">FAQ</h2>
+  <p class="muted" data-i18n="faqHint">Click the # slug to copy a direct link to that card.</p>
+
+  <details class="faq" id="faq-how-conversion-works" open>
+    <summary>
+      <span class="num"><svg><use href="#i-help"/></svg></span>
+      <span class="title" data-i18n="q1">How does the conversion work?</span>
+      <span class="anchor" onclick="copyAnchor(event,'#faq-how-conversion-works')">#faq-how-conversion-works</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </summary>
+    <div class="body">
+      <div class="diagram" aria-hidden="true">
+        <div class="d-piece">
+          <div class="shape filled">&amp;#</div>
+          <div class="label"><em data-i18n="diagOpenTitle">Abre</em><span data-i18n="diagOpen">Marca el inicio</span></div>
+        </div>
+        <div class="d-link"></div>
+        <div class="d-piece">
+          <div class="shape">128512</div>
+          <div class="label"><em data-i18n="diagCodeTitle">Número</em><span data-i18n="diagCode">Identifica el emoji</span></div>
+        </div>
+        <div class="d-link"></div>
+        <div class="d-piece">
+          <div class="shape soft">;</div>
+          <div class="label"><em data-i18n="diagCloseTitle">Cierra</em><span data-i18n="diagClose">Termina la orden</span></div>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div class="d-result-box">
+          <span data-i18n="diagResultLabel">Las tres piezas juntas forman:</span>
+          <div class="row-inline">
+            <code>&amp;#128512;</code>
+            <span class="arrow-soft">→</span>
+            <span class="final-emoji">&#128512;</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:14px" data-i18n="a1"></p>
+    </div>
+  </details>
+
+  <details class="faq" id="faq-why-decimal">
+    <summary>
+      <span class="num"><svg><use href="#i-info"/></svg></span>
+      <span class="title" data-i18n="q2">Why HTML entities instead of emojis?</span>
+      <span class="anchor" onclick="copyAnchor(event,'#faq-why-decimal')">#faq-why-decimal</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </summary>
+    <div class="body" data-i18n="a2"></div>
+  </details>
+
+  <details class="faq" id="faq-markdown-structure">
+    <summary>
+      <span class="num"><svg><use href="#i-book"/></svg></span>
+      <span class="title" data-i18n="q3">What markdown does Lichess use?</span>
+      <span class="anchor" onclick="copyAnchor(event,'#faq-markdown-structure')">#faq-markdown-structure</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </summary>
+    <div class="body">
+      <p data-i18n="a3"></p>
+      <div class="md-table-wrap">
+        <table class="md-table">
+          <thead>
+            <tr>
+              <th data-i18n="mdName">Name</th>
+              <th data-i18n="mdSyntax">Markdown</th>
+              <th data-i18n="mdRenders">Renders as</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td data-i18n="mdH2">Heading 2</td><td><code>## Text</code></td><td><span class="md-render"><h2>Text</h2></span></td></tr>
+            <tr><td data-i18n="mdH3">Heading 3</td><td><code>### Text</code></td><td><span class="md-render"><h3>Text</h3></span></td></tr>
+            <tr><td data-i18n="mdH4">Heading 4</td><td><code>#### Text</code></td><td><span class="md-render"><h4>Text</h4></span></td></tr>
+            <tr><td data-i18n="mdH5">Heading 5</td><td><code>##### Text</code></td><td><span class="md-render"><h5>Text</h5></span></td></tr>
+            <tr><td data-i18n="mdH6">Heading 6</td><td><code>###### Text</code></td><td><span class="md-render"><h6>Text</h6></span></td></tr>
+            <tr><td data-i18n="mdBold">Bold</td><td><code>**Text**</code></td><td><span class="md-render"><b>Text</b></span></td></tr>
+            <tr><td data-i18n="mdItalic">Italic</td><td><code>*Text*</code></td><td><span class="md-render"><i>Text</i></span></td></tr>
+            <tr><td data-i18n="mdBoldItalic">Bold + Italic</td><td><code>***Text***</code></td><td><span class="md-render"><b><i>Text</i></b></span></td></tr>
+            <tr><td data-i18n="mdStrike">Strikethrough</td><td><code>~~Text~~</code></td><td><span class="md-render"><s>Text</s></span></td></tr>
+            <tr><td data-i18n="mdUl">Bullet list</td><td><code>- Item</code></td><td><span class="md-render"><ul><li>Item</li></ul></span></td></tr>
+            <tr><td data-i18n="mdOl">Numbered list</td><td><code>1. Item</code></td><td><span class="md-render"><ol><li>Item</li></ol></span></td></tr>
+            <tr><td data-i18n="mdQuote">Quote</td><td><code>&gt; Text</code></td><td><span class="md-render"><blockquote>Text</blockquote></span></td></tr>
+            <tr><td data-i18n="mdLink">Link</td><td><code>[Text](url)</code></td><td><span class="md-render"><a href="#top">Text</a></span></td></tr>
+            <tr><td data-i18n="mdCode">Inline code</td><td><code>`code`</code></td><td><span class="md-render"><code>code</code></span></td></tr>
+            <tr><td data-i18n="mdHr">Divider</td><td><code>---</code></td><td><span class="md-render"><hr></span></td></tr>
+            <tr><td data-i18n="mdEmoji">Emoji</td><td><code>&amp;#128512;</code></td><td><span class="md-render">&#128512;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details class="faq" id="faq-share-section">
+    <summary>
+      <span class="num"><svg><use href="#i-link"/></svg></span>
+      <span class="title" data-i18n="q4">How do I share a section?</span>
+      <span class="anchor" onclick="copyAnchor(event,'#faq-share-section')">#faq-share-section</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </summary>
+    <div class="body" data-i18n="a4"></div>
+  </details>
+
+  <details class="faq" id="faq-offline-browser">
+    <summary>
+      <span class="num"><svg><use href="#i-offline"/></svg></span>
+      <span class="title" data-i18n="q5">Does it work offline?</span>
+      <span class="anchor" onclick="copyAnchor(event,'#faq-offline-browser')">#faq-offline-browser</span>
+      <svg class="icon chev"><use href="#i-chev"/></svg>
+    </summary>
+    <div class="body" data-i18n="a5"></div>
+  </details>
+
+</main>
+
+<footer>
+  <span class="footer-brand" data-i18n="footer">Lichess Markdown Studio</span>
+  <span class="footer-disclaimer" data-i18n="footerDisclaimer">Independent, unofficial tool. Not affiliated with Lichess.</span>
+
+  <div class="footer-links">
+    <a href="https://github.com/MeowDev1011/Lichess-Marckdown-Studio-?tab=readme-ov-file#" target="_blank" rel="noopener noreferrer">
+      <svg><use href="#i-scale"/></svg>
+      <span data-i18n="footerLicense">MIT License</span>
+    </a>
+    <a href="https://github.com/MeowDev1011/Lichess-Marckdown-Studio" target="_blank" rel="noopener noreferrer">
+      <svg><use href="#i-github"/></svg>
+      <span data-i18n="footerSource">Source code</span>
+    </a>
+  </div>
+
+  <span class="footer-credit">
+    <span data-i18n="footerCreatedBy">Created by</span>
+    <a href="https://lichess.org/@/GatoChess89" target="_blank" rel="noopener noreferrer">@GatoChess89</a>
+  </span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const LIMITS = {
+  teamNameMin: 3,
+  teamNameMax: 30,
+  bioMin: 30,
+  bioMax: 2000
+};
+
+const I18N = {
+  en:{
+    brand:"Lichess Markdown Studio", brandSub:"Team bio · Markdown",
+    h1:"Team biography editor for Lichess",
+    lead:"Write your team bio. Insert emojis with your keyboard; on export they become HTML entities. Headings export as ##.",
+    editorTitle:"Editor", labelTeamName:"Team name", labelBio:"Biography",
+    teamHint:"Required. Between 3 and 30 characters.",
+    teamHintMin:"Minimum 3 characters.",
+    teamHintMax:"Maximum 30 characters.",
+    teamHintLichess:"The word 'Lichess' is reserved.",
+    teamHintOk:"Team name looks good.",
+    btnExport:"Export markdown", btnCopyMd:"Copy", btnDownload:"Download .md",
+    btnExample:"Example", btnClear:"Clear", labelMd:"Exported markdown",
+    converterTitle:"Converter", labelEmoji:"Emojis (one or many)", labelDec:"HTML entities",
+    btnToDec:"To HTML entity", btnToEmoji:"To emoji", labelOut:"Output",
+    btnCopy:"Copy", btnClearAll:"Clear",
+    testTitle:"Preview area",
+    testHint:"Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.",
+    labelPreviewInput:"Bio source (markdown + entities)",
+    labelPreviewRender:"Rendered preview",
+    faqTitle:"FAQ", faqHint:"Click the # slug to copy a direct link to that card.",
+    q1:"How does the conversion work?",
+    diagOpenTitle:"Opens", diagOpen:"Marks the start",
+    diagCodeTitle:"Number", diagCode:"Identifies the emoji",
+    diagCloseTitle:"Closes", diagClose:"Ends the order",
+    diagResultLabel:"All three pieces together form:",
+    a1:"An HTML entity is a tiny instruction the browser reads to draw a special character. It has three parts: an opening (&#), a number that identifies the emoji, and a closing semicolon. When Lichess stores the bio, it keeps only the number in decimal form, so 128512 always means the same emoji. That's why exporting converts every emoji you wrote to its numeric code.",
+    q2:"Why HTML entities instead of emojis?",
+    a2:"HTML entities survive encoding changes, fonts and copy-paste across web, mobile and third-party clients. Raw emojis can be lost or replaced by boxes, but &#128512; always means the same character. Entities are also trivially searchable and moderable.",
+    q3:"What markdown does Lichess use?",
+    a3:"Lichess renders a small subset of markdown in team descriptions. The table below lists every supported element, its syntax, and how it renders.",
+    mdName:"Name", mdSyntax:"Markdown", mdRenders:"Renders as",
+    mdH2:"Heading 2", mdH3:"Heading 3", mdH4:"Heading 4", mdH5:"Heading 5", mdH6:"Heading 6",
+    mdBold:"Bold", mdItalic:"Italic", mdBoldItalic:"Bold + Italic", mdStrike:"Strikethrough",
+    mdUl:"Bullet list", mdOl:"Numbered list", mdQuote:"Quote",
+    mdLink:"Link", mdCode:"Inline code", mdEmoji:"Emoji", mdHr:"Divider",
+    q4:"How do I share a section?",
+    a4:"Click the slug tag on any FAQ card (for example #faq-markdown-structure). The full URL with that anchor is copied to your clipboard. Paste it anywhere and the page will jump straight to that card.",
+    q5:"Does it work offline?",
+    a5:"Yes. Everything runs locally with no network calls. On load the page reads navigator.language to pick a language and prefers-color-scheme to pick light or dark mode. Blue mode is manual only — press the theme button to cycle.",
+    footer:"Lichess Markdown Studio",
+    footerDisclaimer:"Independent, unofficial tool. Not affiliated with Lichess.",
+    footerLicense:"MIT License",
+    footerSource:"Source code",
+    footerCreatedBy:"Created by",
+    lockBadge:"Fill in the team name to edit",
+    bannerTitle:"Team name required",
+    bannerBody:"Please fill in the team name field above before you can edit the biography.",
+    bannerArrow:"The field is highlighted",
+    charMin:"/ 30 min", charMaxLbl:"/ 2000 max",
+    errTeamName:"Please enter a valid team name first.",
+    errBioMin:"Biography needs at least 30 characters.",
+    errBioMax:"Biography is over 2000 characters.",
+    copied:"Copied to clipboard!", mdCopied:"Markdown copied!", downloaded:"File downloaded."
+  },
+  es:{
+    brand:"Lichess Markdown Studio", brandSub:"Bio de equipo · Markdown",
+    h1:"Editor de biografías de equipos para Lichess",
+    lead:"Escribe la biografía del equipo. Inserta emojis con el teclado; al exportar se vuelven entidades HTML. Los títulos salen con ##.",
+    editorTitle:"Editor", labelTeamName:"Nombre del equipo", labelBio:"Biografía",
+    teamHint:"Obligatorio. Entre 3 y 30 caracteres.",
+    teamHintMin:"Mínimo 3 caracteres.",
+    teamHintMax:"Máximo 30 caracteres.",
+    teamHintLichess:"La palabra 'Lichess' está reservada.",
+    teamHintOk:"El nombre se ve bien.",
+    btnExport:"Exportar markdown", btnCopyMd:"Copiar", btnDownload:"Descargar .md",
+    btnExample:"Ejemplo", btnClear:"Limpiar", labelMd:"Markdown exportado",
+    converterTitle:"Conversor", labelEmoji:"Emojis (uno o varios)", labelDec:"Entidades HTML",
+    btnToDec:"A entidad HTML", btnToEmoji:"A emoji", labelOut:"Resultado",
+    btnCopy:"Copiar", btnClearAll:"Limpiar",
+    testTitle:"Zona de vista previa",
+    testHint:"Pega una bio con markdown (##, **negrita**, listas…) y entidades HTML (&#128512;) — se renderiza abajo tal como la mostraría Lichess.",
+    labelPreviewInput:"Bio de origen (markdown + entidades)",
+    labelPreviewRender:"Vista previa renderizada",
+    faqTitle:"Preguntas frecuentes", faqHint:"Haz clic en el slug # para copiar el enlace directo a esa tarjeta.",
+    q1:"¿Cómo funciona la conversión?",
+    diagOpenTitle:"Abre", diagOpen:"Marca el inicio",
+    diagCodeTitle:"Número", diagCode:"Identifica el emoji",
+    diagCloseTitle:"Cierra", diagClose:"Termina la orden",
+    diagResultLabel:"Las tres piezas juntas forman:",
+    a1:"Una entidad HTML es una pequeña instrucción que el navegador lee para dibujar un carácter especial. Tiene tres partes: una apertura (&#), un número que identifica el emoji y un cierre con punto y coma. Cuando Lichess guarda la biografía solo conserva el número en formato decimal, así que 128512 siempre significa el mismo emoji. Por eso al exportar cada emoji que escribiste se convierte a su código numérico.",
+    q2:"¿Por qué entidades HTML en vez de emojis?",
+    a2:"Las entidades HTML sobreviven a cambios de codificación, fuentes y copiar-pegar entre web, móvil y clientes de terceros. Los emojis pueden perderse o convertirse en cuadros, pero &#128512; siempre significa lo mismo. Además son fáciles de indexar y moderar.",
+    q3:"¿Qué markdown usa Lichess?",
+    a3:"Lichess renderiza un subconjunto pequeño de markdown en las descripciones de equipos. La tabla de abajo muestra todos los elementos soportados, su sintaxis y cómo se ven.",
+    mdName:"Nombre", mdSyntax:"Markdown", mdRenders:"Se ve como",
+    mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
+    mdBold:"Negrita", mdItalic:"Cursiva", mdBoldItalic:"Negrita + cursiva", mdStrike:"Tachado",
+    mdUl:"Lista con viñetas", mdOl:"Lista numerada", mdQuote:"Cita",
+    mdLink:"Enlace", mdCode:"Código en línea", mdEmoji:"Emoji", mdHr:"Divisor",
+    q4:"¿Cómo comparto una sección?",
+    a4:"Haz clic en la etiqueta slug de cualquier tarjeta (por ejemplo #faq-markdown-structure). Se copia la URL completa con ese ancla. Pégala donde quieras y la página saltará directo a esa tarjeta.",
+    q5:"¿Funciona sin conexión?",
+    a5:"Sí. Todo se ejecuta localmente sin llamadas de red. Al cargar lee navigator.language para elegir idioma y prefers-color-scheme para elegir claro u oscuro. El modo azul es solo manual — pulsa el botón de tema para ciclar.",
+    footer:"Lichess Markdown Studio",
+    footerDisclaimer:"Herramienta independiente y no oficial. Sin afiliación con Lichess.",
+    footerLicense:"Licencia MIT",
+    footerSource:"Código fuente",
+    footerCreatedBy:"Creado por",
+    lockBadge:"Rellena el nombre del equipo para editar",
+    bannerTitle:"Nombre del equipo obligatorio",
+    bannerBody:"Rellena el campo del nombre del equipo de arriba antes de poder editar la biografía.",
+    bannerArrow:"El campo está resaltado",
+    charMin:"/ 30 mín", charMaxLbl:"/ 2000 máx",
+    errTeamName:"Escribe primero un nombre de equipo válido.",
+    errBioMin:"La biografía necesita al menos 30 caracteres.",
+    errBioMax:"La biografía supera los 2000 caracteres.",
+    copied:"¡Copiado al portapapeles!", mdCopied:"¡Markdown copiado!", downloaded:"Archivo descargado."
+  },
+  fr:{
+    brand:"Lichess Markdown Studio", brandSub:"Bio d'équipe · Markdown",
+    h1:"Éditeur de biographies d'équipes pour Lichess",
+    lead:"Écrivez la biographie de l'équipe. Insérez les emojis au clavier ; à l'export ils deviennent des entités HTML. Les titres sortent en ##.",
+    editorTitle:"Éditeur", labelTeamName:"Nom de l'équipe", labelBio:"Biographie",
+    teamHint:"Requis. Entre 3 et 30 caractères.",
+    teamHintMin:"Minimum 3 caractères.",
+    teamHintMax:"Maximum 30 caractères.",
+    teamHintLichess:"Le mot 'Lichess' est réservé.",
+    teamHintOk:"Le nom est correct.",
+    btnExport:"Exporter le markdown", btnCopyMd:"Copier", btnDownload:"Télécharger .md",
+    btnExample:"Exemple", btnClear:"Effacer", labelMd:"Markdown exporté",
+    converterTitle:"Convertisseur", labelEmoji:"Emojis (un ou plusieurs)", labelDec:"Entités HTML",
+    btnToDec:"Vers entité HTML", btnToEmoji:"Vers emoji", labelOut:"Résultat",
+    btnCopy:"Copier", btnClearAll:"Effacer",
+    testTitle:"Zone d'aperçu",
+    testHint:"Collez une bio avec du markdown (##, **gras**, listes…) et des entités HTML (&#128512;) — le rendu s'affiche en dessous comme sur Lichess.",
+    labelPreviewInput:"Bio source (markdown + entités)",
+    labelPreviewRender:"Aperçu rendu",
+    faqTitle:"FAQ", faqHint:"Cliquez sur le slug # pour copier le lien direct vers cette carte.",
+    q1:"Comment fonctionne la conversion ?",
+    diagOpenTitle:"Ouvre", diagOpen:"Marque le début",
+    diagCodeTitle:"Numéro", diagCode:"Identifie l'emoji",
+    diagCloseTitle:"Ferme", diagClose:"Termine l'ordre",
+    diagResultLabel:"Les trois pièces ensemble forment :",
+    a1:"Une entité HTML est une petite instruction que le navigateur lit pour dessiner un caractère spécial. Elle a trois parties : une ouverture (&#), un nombre qui identifie l'emoji, et un point-virgule de fermeture. Lichess ne garde que le nombre en décimal, donc 128512 signifie toujours le même emoji. C'est pourquoi l'export convertit chaque emoji en son code numérique.",
+    q2:"Pourquoi des entités HTML ?",
+    a2:"Les entités HTML survivent aux changements d'encodage, de police et au copier-coller. Les emojis peuvent disparaître, mais &#128512; signifie toujours la même chose.",
+    q3:"Quel markdown utilise Lichess ?",
+    a3:"Lichess rend un petit sous-ensemble de markdown dans les descriptions d'équipes. Le tableau ci-dessous liste chaque élément supporté, sa syntaxe et son rendu.",
+    mdName:"Nom", mdSyntax:"Markdown", mdRenders:"Rendu",
+    mdH2:"Titre 2", mdH3:"Titre 3", mdH4:"Titre 4", mdH5:"Titre 5", mdH6:"Titre 6",
+    mdBold:"Gras", mdItalic:"Italique", mdBoldItalic:"Gras + italique", mdStrike:"Barré",
+    mdUl:"Liste à puces", mdOl:"Liste numérotée", mdQuote:"Citation",
+    mdLink:"Lien", mdCode:"Code en ligne", mdEmoji:"Emoji", mdHr:"Séparateur",
+    q4:"Comment partager une section ?",
+    a4:"Cliquez sur le slug d'une carte (par exemple #faq-markdown-structure). L'URL complète est copiée.",
+    q5:"Fonctionne-t-il hors ligne ?",
+    a5:"Oui. Tout s'exécute localement. Au chargement la page lit navigator.language et prefers-color-scheme. Le mode bleu est uniquement manuel.",
+    footer:"Lichess Markdown Studio",
+    footerDisclaimer:"Outil indépendant et non officiel. Non affilié à Lichess.",
+    footerLicense:"Licence MIT",
+    footerSource:"Code source",
+    footerCreatedBy:"Créé par",
+    lockBadge:"Remplissez le nom de l'équipe pour éditer",
+    bannerTitle:"Nom de l'équipe requis",
+    bannerBody:"Remplissez le champ du nom de l'équipe ci-dessus avant de pouvoir éditer la biographie.",
+    bannerArrow:"Le champ est mis en surbrillance",
+    charMin:"/ 30 min", charMaxLbl:"/ 2000 max",
+    errTeamName:"Entrez d'abord un nom d'équipe valide.",
+    errBioMin:"La biographie nécessite au moins 30 caractères.",
+    errBioMax:"La biographie dépasse 2000 caractères.",
+    copied:"Copié dans le presse-papiers !", mdCopied:"Markdown copié !", downloaded:"Fichier téléchargé."
+  },
+  de:{
+    brand:"Lichess Markdown Studio", brandSub:"Team-Bio · Markdown",
+    h1:"Team-Biografie-Editor für Lichess",
+    lead:"Schreibe die Team-Biografie. Emojis mit der Tastatur einfügen; beim Export werden sie zu HTML-Entities. Überschriften werden als ## exportiert.",
+    editorTitle:"Editor", labelTeamName:"Teamname", labelBio:"Biografie",
+    teamHint:"Erforderlich. Zwischen 3 und 30 Zeichen.",
+    teamHintMin:"Mindestens 3 Zeichen.",
+    teamHintMax:"Maximal 30 Zeichen.",
+    teamHintLichess:"Das Wort 'Lichess' ist reserviert.",
+    teamHintOk:"Der Name sieht gut aus.",
+    btnExport:"Markdown exportieren", btnCopyMd:"Kopieren", btnDownload:"Als .md herunterladen",
+    btnExample:"Beispiel", btnClear:"Leeren", labelMd:"Exportiertes Markdown",
+    converterTitle:"Konverter", labelEmoji:"Emojis (eines oder mehrere)", labelDec:"HTML-Entities",
+    btnToDec:"Zu HTML-Entity", btnToEmoji:"Zu Emoji", labelOut:"Ausgabe",
+    btnCopy:"Kopieren", btnClearAll:"Leeren",
+    testTitle:"Vorschaubereich",
+    testHint:"Füge eine Bio mit Markdown (##, **fett**, Listen…) und HTML-Entities (&#128512;) ein — sie wird unten so gerendert, wie Lichess sie anzeigt.",
+    labelPreviewInput:"Bio-Quelle (Markdown + Entities)",
+    labelPreviewRender:"Gerenderte Vorschau",
+    faqTitle:"FAQ", faqHint:"Klicke auf den #-Slug, um den direkten Link zu kopieren.",
+    q1:"Wie funktioniert die Umwandlung?",
+    diagOpenTitle:"Öffnet", diagOpen:"Markiert den Start",
+    diagCodeTitle:"Nummer", diagCode:"Identifiziert das Emoji",
+    diagCloseTitle:"Schließt", diagClose:"Beendet den Befehl",
+    diagResultLabel:"Alle drei Teile zusammen ergeben:",
+    a1:"Eine HTML-Entität ist eine kleine Anweisung, die der Browser liest, um ein Sonderzeichen zu zeichnen. Sie hat drei Teile: eine Öffnung (&#), eine Nummer, die das Emoji identifiziert, und ein Semikolon zum Schließen. Lichess speichert nur die Zahl als Dezimalwert, also bedeutet 128512 immer dasselbe Emoji. Deshalb wandelt der Export jedes Emoji in seinen Zahlencode um.",
+    q2:"Warum HTML-Entities?",
+    a2:"HTML-Entities überleben Kodierungswechsel, Schriftarten und Copy-Paste. Emojis können verloren gehen, aber &#128512; bedeutet immer dasselbe.",
+    q3:"Welches Markdown nutzt Lichess?",
+    a3:"Lichess rendert eine kleine Markdown-Teilmenge in Teambeschreibungen. Die Tabelle unten listet jedes unterstützte Element, seine Syntax und sein Rendering.",
+    mdName:"Name", mdSyntax:"Markdown", mdRenders:"Erscheint als",
+    mdH2:"Überschrift 2", mdH3:"Überschrift 3", mdH4:"Überschrift 4", mdH5:"Überschrift 5", mdH6:"Überschrift 6",
+    mdBold:"Fett", mdItalic:"Kursiv", mdBoldItalic:"Fett + Kursiv", mdStrike:"Durchgestrichen",
+    mdUl:"Aufzählung", mdOl:"Nummerierte Liste", mdQuote:"Zitat",
+    mdLink:"Link", mdCode:"Inline-Code", mdEmoji:"Emoji", mdHr:"Trennlinie",
+    q4:"Wie teile ich einen Abschnitt?",
+    a4:"Klicke auf den Slug einer Karte (z. B. #faq-markdown-structure). Die vollständige URL wird kopiert.",
+    q5:"Funktioniert es offline?",
+    a5:"Ja. Alles läuft lokal. Beim Laden liest die Seite navigator.language und prefers-color-scheme. Der blaue Modus ist nur manuell.",
+    footer:"Lichess Markdown Studio",
+    footerDisclaimer:"Unabhängiges, inoffizielles Tool. Nicht mit Lichess verbunden.",
+    footerLicense:"MIT-Lizenz",
+    footerSource:"Quellcode",
+    footerCreatedBy:"Erstellt von",
+    lockBadge:"Teamnamen eingeben zum Bearbeiten",
+    bannerTitle:"Teamname erforderlich",
+    bannerBody:"Bitte fülle zuerst das Feld für den Teamnamen aus, bevor du die Biografie bearbeiten kannst.",
+    bannerArrow:"Das Feld ist hervorgehoben",
+    charMin:"/ 30 min", charMaxLbl:"/ 2000 max",
+    errTeamName:"Bitte zuerst einen gültigen Teamnamen eingeben.",
+    errBioMin:"Die Biografie braucht mindestens 30 Zeichen.",
+    errBioMax:"Die Biografie überschreitet 2000 Zeichen.",
+    copied:"In die Zwischenablage kopiert!", mdCopied:"Markdown kopiert!", downloaded:"Datei heruntergeladen."
+  },
+  pt:{
+    brand:"Lichess Markdown Studio", brandSub:"Bio de equipe · Markdown",
+    h1:"Editor de biografias de equipes para Lichess",
+    lead:"Escreva a biografia da equipe. Insira emojis com o teclado; ao exportar viram entidades HTML. Títulos saem com ##.",
+    editorTitle:"Editor", labelTeamName:"Nome da equipe", labelBio:"Biografia",
+    teamHint:"Obrigatório. Entre 3 e 30 caracteres.",
+    teamHintMin:"Mínimo 3 caracteres.",
+    teamHintMax:"Máximo 30 caracteres.",
+    teamHintLichess:"A palavra 'Lichess' é reservada.",
+    teamHintOk:"O nome está bom.",
+    btnExport:"Exportar markdown", btnCopyMd:"Copiar", btnDownload:"Baixar .md",
+    btnExample:"Exemplo", btnClear:"Limpar", labelMd:"Markdown exportado",
+    converterTitle:"Conversor", labelEmoji:"Emojis (um ou vários)", labelDec:"Entidades HTML",
+    btnToDec:"Para entidade HTML", btnToEmoji:"Para emoji", labelOut:"Resultado",
+    btnCopy:"Copiar", btnClearAll:"Limpar",
+    testTitle:"Área de pré-visualização",
+    testHint:"Cole uma bio com markdown (##, **negrito**, listas…) e entidades HTML (&#128512;) — renderiza abaixo como o Lichess mostraria.",
+    labelPreviewInput:"Bio fonte (markdown + entidades)",
+    labelPreviewRender:"Pré-visualização renderizada",
+    faqTitle:"Perguntas frequentes", faqHint:"Clique no slug # para copiar o link direto para aquele cartão.",
+    q1:"Como funciona a conversão?",
+    diagOpenTitle:"Abre", diagOpen:"Marca o início",
+    diagCodeTitle:"Número", diagCode:"Identifica o emoji",
+    diagCloseTitle:"Fecha", diagClose:"Termina a ordem",
+    diagResultLabel:"As três partes juntas formam:",
+    a1:"Uma entidade HTML é uma pequena instrução que o navegador lê para desenhar um caractere especial. Tem três partes: uma abertura (&#), um número que identifica o emoji e um ponto e vírgula de fechamento. O Lichess guarda apenas o número em decimal, então 128512 sempre significa o mesmo emoji. Por isso a exportação converte cada emoji no seu código numérico.",
+    q2:"Por que entidades HTML?",
+    a2:"Entidades HTML sobrevivem a mudanças de codificação, fontes e copiar-colar. Emojis podem se perder, mas &#128512; sempre significa o mesmo.",
+    q3:"Que markdown o Lichess usa?",
+    a3:"O Lichess renderiza um pequeno subconjunto de markdown nas descrições de equipes. A tabela abaixo lista cada elemento suportado, sua sintaxe e como ele aparece.",
+    mdName:"Nome", mdSyntax:"Markdown", mdRenders:"Aparece como",
+    mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
+    mdBold:"Negrito", mdItalic:"Itálico", mdBoldItalic:"Negrito + itálico", mdStrike:"Riscado",
+    mdUl:"Lista com marcadores", mdOl:"Lista numerada", mdQuote:"Citação",
+    mdLink:"Link", mdCode:"Código em linha", mdEmoji:"Emoji", mdHr:"Divisor",
+    q4:"Como compartilho uma seção?",
+    a4:"Clique no slug de qualquer cartão (por exemplo #faq-markdown-structure). A URL completa é copiada.",
+    q5:"Funciona offline?",
+    a5:"Sim. Tudo roda localmente. Ao carregar, a página lê navigator.language e prefers-color-scheme. O modo azul é apenas manual.",
+    footer:"Lichess Markdown Studio",
+    footerDisclaimer:"Ferramenta independente e não oficial. Sem afiliação com Lichess.",
+    footerLicense:"Licença MIT",
+    footerSource:"Código-fonte",
+    footerCreatedBy:"Criado por",
+    lockBadge:"Preencha o nome da equipe para editar",
+    bannerTitle:"Nome da equipe obrigatório",
+    bannerBody:"Preencha o campo do nome da equipe acima antes de poder editar a biografia.",
+    bannerArrow:"O campo está destacado",
+    charMin:"/ 30 mín", charMaxLbl:"/ 2000 máx",
+    errTeamName:"Digite primeiro um nome de equipe válido.",
+    errBioMin:"A biografia precisa de pelo menos 30 caracteres.",
+    errBioMax:"A biografia ultrapassa 2000 caracteres.",
+    copied:"Copiado para a área de transferência!", mdCopied:"Markdown copiado!", downloaded:"Arquivo baixado."
+  }
+};
+
+const SUPPORTED = ["en","es","fr","de","pt"];
+const THEMES = ["light","dark","blue"];
+let currentLang = "en";
+let userPickedTheme = false;
+let editorUnlocked = false;
+
+function applyLang(lang){
+  if(!SUPPORTED.includes(lang)) lang = "en";
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  const dict = I18N[lang];
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    if(dict[key] !== undefined) el.textContent = dict[key];
+  });
+  updateTeamHint();
+  updateCharCounter();
+}
+
+function detectBrowserLang(){
+  const list = (navigator.languages && navigator.languages.length)
+    ? navigator.languages : [navigator.language || "en"];
+  for(const tag of list){
+    const code = tag.slice(0,2).toLowerCase();
+    if(SUPPORTED.includes(code)) return code;
+  }
+  return "en";
+}
+function detectBrowserTheme(){
+  return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ? 'dark' : 'light';
+}
+function updateThemeIcon(){
+  const t = document.body.dataset.theme;
+  const iconId = t === 'dark' ? '#i-sun' : (t === 'blue' ? '#i-moon' : '#i-drop');
+  document.getElementById('themeIcon').setAttribute('href', iconId);
+}
+function updateLogo(theme){
+  const img = document.getElementById('brandLogo');
+  if(!img) return;
+  const target = (theme === 'light') ? 'logo.png' : 'logo_black_blue.png';
+  if(img.getAttribute('src') !== target){
+    img.style.display = '';
+    if(img.nextElementSibling) img.nextElementSibling.style.display = 'none';
+    img.setAttribute('src', target);
+  }
+}
+function applyTheme(theme){
+  if(!THEMES.includes(theme)) theme = 'light';
+  document.body.dataset.theme = theme;
+  updateThemeIcon();
+  updateLogo(theme);
+}
+
+function validateTeamName(showError){
+  const input = document.getElementById('teamName');
+  const hint = document.getElementById('teamHint');
+  const name = input.value.trim();
+  const dict = I18N[currentLang];
+
+  let msg = dict.teamHint;
+  let ok = true;
+  let isError = false;
+
+  if(name.length === 0){
+    msg = dict.teamHint;
+    ok = false;
+  } else if(name.length < LIMITS.teamNameMin){
+    msg = dict.teamHintMin;
+    ok = false; isError = true;
+  } else if(name.length > LIMITS.teamNameMax){
+    msg = dict.teamHintMax;
+    ok = false; isError = true;
+  } else if(/lichess/i.test(name)){
+    msg = dict.teamHintLichess;
+    ok = false; isError = true;
+  } else {
+    msg = dict.teamHintOk;
+  }
+
+  hint.textContent = msg;
+  hint.classList.toggle("error-msg", isError);
+  hint.classList.toggle("success-msg", ok && name.length > 0);
+  input.classList.toggle("error", isError);
+
+  if(showError && !ok && name.length > 0){
+    input.classList.add("field-highlight");
+    setTimeout(()=>input.classList.remove("field-highlight"), 1500);
+  }
+  return ok;
+}
+
+function updateTeamHint(){ validateTeamName(false); }
+
+function getEditorText(){
+  return (document.getElementById('bioEditor').textContent || "").trim();
+}
+function updateCharCounter(){
+  const el = document.getElementById('charCounter');
+  const num = document.getElementById('charNum');
+  const max = document.getElementById('charMax');
+  const bar = document.getElementById('charBar');
+  if(!el || !num || !bar) return;
+  const len = getEditorText().length;
+  num.textContent = len;
+  if(max) max.textContent = len;
+  const pct = Math.min(100, (len / LIMITS.bioMax) * 100);
+  bar.style.width = pct + "%";
+  el.classList.toggle("ok", len >= LIMITS.bioMin);
+  el.classList.toggle("warn", len > LIMITS.bioMax);
+}
+
+function setEditorLocked(locked){
+  editorUnlocked = !locked;
+  const editor = document.getElementById('bioEditor');
+  const toolbar = document.getElementById('toolbar');
+  const overlay = document.getElementById('editorOverlay');
+  const banner = document.getElementById('banner');
+
+  editor.classList.toggle('locked', locked);
+  toolbar.classList.toggle('locked', locked);
+  overlay.classList.toggle('show', locked);
+  if(locked) banner.classList.add('show');
+  else banner.classList.remove('show');
+
+  editor.setAttribute('contenteditable', locked ? 'false' : 'true');
+}
+
+function onOverlayClick(){
+  const input = document.getElementById('teamName');
+  input.classList.add('field-highlight');
+  input.focus();
+  setTimeout(()=>input.classList.remove('field-highlight'), 1600);
+}
+
+const editor = document.getElementById('bioEditor');
+
+document.getElementById('toolbar').addEventListener('mousedown', e=>{
+  if(e.target.closest('button')) e.preventDefault();
+});
+document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(!editorUnlocked) return;
+    editor.focus();
+    document.execCommand(btn.dataset.cmd, false, null);
+    exportMarkdown();
+    updateCharCounter();
+  });
+});
+document.querySelectorAll('.toolbar button[data-block]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    if(!editorUnlocked) return;
+    editor.focus();
+    document.execCommand('formatBlock', false, btn.dataset.block);
+    exportMarkdown();
+    updateCharCounter();
+  });
+});
+editor.addEventListener('input', ()=>{ exportMarkdown(); updateCharCounter(); });
+document.getElementById('editorOverlay').addEventListener('click', onOverlayClick);
+
+function isEmojiCodePoint(cp){
+  if(cp === 0xFE0F || cp === 0x200D) return true;
+  if(cp >= 0x1F300 && cp <= 0x1FAFF) return true;
+  if(cp >= 0x1F000 && cp <= 0x1F2FF) return true;
+  if(cp >= 0x1F1E6 && cp <= 0x1F1FF) return true;
+  if(cp >= 0x2600  && cp <= 0x27BF)  return true;
+  if(cp >= 0x2B00  && cp <= 0x2BFF)  return true;
+  if(cp === 0x2764) return true;
+  return false;
+}
+function emojiToDecimalString(text){
+  let out = "";
+  for(const ch of Array.from(text)){
+    const cp = ch.codePointAt(0);
+    out += isEmojiCodePoint(cp) ? ("&#" + cp + ";") : ch;
+  }
+  return out;
+}
+
+function nodeToMarkdown(node){
+  if(node.nodeType === 3) return emojiToDecimalString(node.textContent);
+  if(node.nodeType !== 1) return "";
+  const tag = node.tagName.toLowerCase();
+  const inner = Array.from(node.childNodes).map(nodeToMarkdown).join("");
+  switch(tag){
+    case "b": case "strong": return "**" + inner + "**";
+    case "i": case "em":     return "*" + inner + "*";
+    case "u":                return inner;
+    case "s": case "strike": case "del": return "~~" + inner + "~~";
+    case "h1": return "\n# " + inner + "\n";
+    case "h2": return "\n## " + inner + "\n";
+    case "h3": return "\n### " + inner + "\n";
+    case "h4": return "\n#### " + inner + "\n";
+    case "h5": return "\n##### " + inner + "\n";
+    case "h6": return "\n###### " + inner + "\n";
+    case "p":  return "\n" + inner + "\n";
+    case "br": return "\n";
+    case "blockquote": return "\n> " + inner.trim() + "\n";
+    case "ul": case "ol": return "\n" + inner + "\n";
+    case "li":{
+      const parent = node.parentNode.tagName.toLowerCase();
+      if(parent === "ol"){
+        const idx = Array.from(node.parentNode.children).indexOf(node) + 1;
+        return idx + ". " + inner.trim() + "\n";
+      }
+      return "- " + inner.trim() + "\n";
+    }
+    case "div": return inner + "\n";
+    default: return inner;
+  }
+}
+function setOutput(el, text){
+  el.textContent = text;
+  el.dataset.empty = (!text || text === "—") ? "true" : "false";
+}
+function exportMarkdown(){
+  let md = "";
+  for(const child of editor.childNodes) md += nodeToMarkdown(child);
+  md = md.replace(/\n{3,}/g, "\n\n").trim();
+  setOutput(document.getElementById('mdOut'), md);
+  updateButtons();
+}
+function updateButtons(){
+  const nameOk = validateTeamName(false);
+  const len = getEditorText().length;
+  const bioOk = len >= LIMITS.bioMin && len <= LIMITS.bioMax;
+  document.getElementById('exportBtn').disabled = !(nameOk && bioOk);
+  document.getElementById('downloadBtn').disabled = !(nameOk && bioOk);
+}
+
+function onExportClick(){
+  const nameOk = validateTeamName(true);
+  const len = getEditorText().length;
+  if(!nameOk){ showToast(I18N[currentLang].errTeamName); return; }
+  if(len < LIMITS.bioMin){ showToast(I18N[currentLang].errBioMin); return; }
+  if(len > LIMITS.bioMax){ showToast(I18N[currentLang].errBioMax); return; }
+  exportMarkdown();
+  showToast(I18N[currentLang].mdCopied);
+}
+
+function slugifyTeamName(name){
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function copyMd(){
+  const txt = document.getElementById('mdOut').textContent;
+  if(!txt) return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    showToast(I18N[currentLang].mdCopied);
+  }).catch(()=>fallbackCopy(txt, I18N[currentLang].mdCopied));
+}
+function downloadMd(){
+  const nameOk = validateTeamName(true);
+  const len = getEditorText().length;
+  if(!nameOk){ showToast(I18N[currentLang].errTeamName); return; }
+  if(len < LIMITS.bioMin){ showToast(I18N[currentLang].errBioMin); return; }
+  if(len > LIMITS.bioMax){ showToast(I18N[currentLang].errBioMax); return; }
+  const name = document.getElementById('teamName').value.trim();
+  const md = document.getElementById('mdOut').textContent;
+  if(!md) return;
+  const slug = slugifyTeamName(name) || "team";
+  const filename = "team_bio_" + slug + ".md";
+  const blob = new Blob([md], {type:"text/markdown;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast(I18N[currentLang].downloaded + "  " + filename);
+}
+function clearEditor(){
+  editor.innerHTML = "";
+  exportMarkdown();
+  updateCharCounter();
+}
+function loadExample(){
+  editor.innerHTML =
+    '<h2>Team description</h2>' +
+    '<p>We are a <b>friendly</b> club for <i>classical</i> and blitz players. 😀♟️</p>' +
+    '<h2>Rules</h2>' +
+    '<ul><li>Play fair.</li><li>Respect everyone.</li></ul>' +
+    '<blockquote>Chess is a game, not a war.</blockquote>';
+  exportMarkdown();
+  updateCharCounter();
+}
+
+function emojiToDecimal(){
+  const input = document.getElementById('emojiIn').value;
+  const out = [];
+  for(const ch of Array.from(input)){
+    const cp = ch.codePointAt(0);
+    if(cp === 32 || cp === 10 || cp === 13 || cp === 9) continue;
+    if(isEmojiCodePoint(cp)) out.push("&#" + cp + ";");
+  }
+  setOutput(document.getElementById('out'), out.length ? out.join(" ") : "");
+}
+function decimalToEmoji(){
+  const raw = document.getElementById('decIn').value.trim();
+  if(!raw){ setOutput(document.getElementById('out'), ""); return; }
+  const parts = raw.split(/[\s,;]+/).filter(Boolean);
+  let result = "";
+  for(const p of parts){
+    const clean = p.replace(/^&#/, "").replace(/;?$/, "");
+    const n = parseInt(clean, 10);
+    result += (!isNaN(n) && n >= 0 && n <= 0x10FFFF) ? String.fromCodePoint(n) : "\uFFFD";
+  }
+  setOutput(document.getElementById('out'), result);
+}
+function clearAll(){
+  document.getElementById('emojiIn').value = "";
+  document.getElementById('decIn').value = "";
+  setOutput(document.getElementById('out'), "");
+}
+function copyOut(){
+  const txt = document.getElementById('out').textContent;
+  if(!txt) return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    showToast(I18N[currentLang].copied);
+  }).catch(()=>fallbackCopy(txt, I18N[currentLang].copied));
+}
+function fallbackCopy(txt, msg){
+  const ta = document.createElement('textarea');
+  ta.value = txt; document.body.appendChild(ta);
+  ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast(msg);
+}
+
+function escapeHTML(s){
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function restoreEntities(s){
+  s = s.replace(/&amp;#(\d+);/g, "&#$1;");
+  s = s.replace(/&amp;#x([0-9a-fA-F]+);/g, "&#x$1;");
+  return s;
+}
+function inlineMarkdown(s){
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+  s = s.replace(/\*\*\*([^*]+)\*\*\*/g, "<b><i>$1</i></b>");
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  s = s.replace(/(^|[^*])\*([^*]+)\*/g, "$1<i>$2</i>");
+  s = s.replace(/~~([^~]+)~~/g, "<s>$1</s>");
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  return s;
+}
+function renderBio(source){
+  if(!source || source.trim() === "") return "";
+  let s = escapeHTML(source);
+  s = restoreEntities(s);
+
+  const lines = s.split(/\r?\n/);
+  const out = [];
+  let listOpen = null;
+
+  const closeList = () => {
+    if(listOpen){ out.push("</" + listOpen + ">"); listOpen = null; }
+  };
+
+  for(const raw of lines){
+    const line = raw;
+    let m;
+
+    if(m = line.match(/^######\s+(.*)$/)){ closeList(); out.push("<h6>" + inlineMarkdown(m[1]) + "</h6>"); continue; }
+    if(m = line.match(/^#####\s+(.*)$/)){ closeList(); out.push("<h5>" + inlineMarkdown(m[1]) + "</h5>"); continue; }
+    if(m = line.match(/^####\s+(.*)$/)){ closeList(); out.push("<h4>" + inlineMarkdown(m[1]) + "</h4>"); continue; }
+    if(m = line.match(/^###\s+(.*)$/)){ closeList(); out.push("<h3>" + inlineMarkdown(m[1]) + "</h3>"); continue; }
+    if(m = line.match(/^##\s+(.*)$/)){ closeList(); out.push("<h2>" + inlineMarkdown(m[1]) + "</h2>"); continue; }
+    if(m = line.match(/^#\s+(.*)$/)){ closeList(); out.push("<h1>" + inlineMarkdown(m[1]) + "</h1>"); continue; }
+
+    if(/^\s*---+\s*$/.test(line)){ closeList(); out.push("<hr>"); continue; }
+
+    if(m = line.match(/^\s*>\s?(.*)$/)){ closeList(); out.push("<blockquote>" + inlineMarkdown(m[1]) + "</blockquote>"); continue; }
+
+    if(m = line.match(/^\s*[-*]\s+(.*)$/)){
+      if(listOpen !== "ul"){ closeList(); out.push("<ul>"); listOpen = "ul"; }
+      out.push("<li>" + inlineMarkdown(m[1]) + "</li>");
+      continue;
+    }
+    if(m = line.match(/^\s*\d+\.\s+(.*)$/)){
+      if(listOpen !== "ol"){ closeList(); out.push("<ol>"); listOpen = "ol"; }
+      out.push("<li>" + inlineMarkdown(m[1]) + "</li>");
+      continue;
+    }
+
+    if(line.trim() === ""){ closeList(); continue; }
+
+    closeList();
+    out.push("<p>" + inlineMarkdown(line) + "</p>");
+  }
+  closeList();
+  return out.join("\n");
+}
+function updatePreview(){
+  const src = document.getElementById('previewIn').value;
+  document.getElementById('previewOut').innerHTML = renderBio(src);
+}
+document.getElementById('previewIn').addEventListener('input', updatePreview);
+
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+const initialLang = detectBrowserLang();
+applyLang(initialLang);
+document.getElementById('langSelect').value = initialLang;
+document.getElementById('langSelect').addEventListener('change', e=>applyLang(e.target.value));
+
+applyTheme(detectBrowserTheme());
+
+document.getElementById('themeBtn').addEventListener('click', ()=>{
+  userPickedTheme = true;
+  const cur = document.body.dataset.theme;
+  const idx = THEMES.indexOf(cur);
+  applyTheme(THEMES[(idx + 1) % THEMES.length]);
+});
+
+if(window.matchMedia){
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  const onChange = e => {
+    if(userPickedTheme) return;
+    applyTheme(e.matches ? 'dark' : 'light');
+  };
+  mq.addEventListener ? mq.addEventListener('change', onChange) : mq.addListener(onChange);
+}
+
+document.getElementById('teamName').addEventListener('input', ()=>{
+  const ok = validateTeamName(false);
+  setEditorLocked(!ok);
+  updateButtons();
+});
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  setEditorLocked(true);
+  exportMarkdown();
+  updateCharCounter();
+  updatePreview();
+});
+</script>
+</body>
+</html>
