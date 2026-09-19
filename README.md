@@ -137,7 +137,7 @@ Created by **[GatoChess89](https://lichess.org/@/GatoChess89)**.
 - Lichess: [@GatoChess89](https://lichess.org/@/GatoChess89)
 - GitHub: [@MeowDev1011](https://github.com/MeowDev1011)
 
-Source code: https://github.com/MeowDev1011/Lichess-Marckdown-Studio
+Source code: https://github.com/MeowDev1011/Lichess-Marckdown-Studio-
 
 ---
 
