@@ -90,7 +90,6 @@ The editor reads each character with `codePointAt(0)`, gets the number, and wrap
 | Strikethrough | `~~Text~~` | ~~Text~~ |
 | Bullet list | `- Item` | • Item |
 | Numbered list | `1. Item` | 1. Item |
-| Quote | `> Text` | Bordered quote |
 | Link | `[Text](url)` | [Text](url) |
 | Inline code | `` `code` `` | `code` |
 | Divider | `---` | Horizontal rule |
