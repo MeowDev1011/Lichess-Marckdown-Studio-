@@ -126,7 +126,7 @@ Lichess-Marckdown-Studio/
 
 Released under the **MIT License**.
 
-Full terms: https://github.com/MeowDev1011/Lichess-Marckdown-Studio-?tab=readme-ov-file#
+Full terms: https://github.com/MeowDev1011/Lichess-Marckdown-Studio-/blob/main/LICENSE
 
 ---
 
