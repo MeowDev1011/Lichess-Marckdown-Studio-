@@ -412,6 +412,36 @@ label .req{color:var(--red);margin-left:3px;}
 .md-render hr{border:none;border-top:1px solid var(--border-strong);margin:4px 0;}
 .md-render a{text-decoration:underline;}
 
+/* ===== Info añadida bajo la tabla de markdown ===== */
+.md-info{
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+}
+.md-info h4{
+  font-size:.82rem;
+  font-weight:700;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:18px 0 6px;
+}
+.md-info h4:first-child{margin-top:0;}
+.md-info p{
+  font-size:.88rem;
+  line-height:1.7;
+  margin:0 0 4px;
+  color:var(--muted);
+}
+.md-info p code{
+  font-family:var(--mono);
+  font-size:.85em;
+  background:var(--surface-2);
+  padding:1px 5px;
+  border-radius:3px;
+  color:var(--fg);
+}
+
 footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;
   color:var(--muted);font-size:.8rem;line-height:1.7;}
 footer .footer-brand{display:block;font-weight:600;color:var(--fg);
@@ -767,6 +797,17 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
           </tbody>
         </table>
       </div>
+
+      <div class="md-info">
+        <h4 data-i18n="mdWhatTitle">What is markdown?</h4>
+        <p data-i18n="mdWhatBody"></p>
+
+        <h4 data-i18n="mdWhyTitle">Why does Lichess accept it?</h4>
+        <p data-i18n="mdWhyBody"></p>
+
+        <h4 data-i18n="mdHistoryTitle">A bit of history</h4>
+        <p data-i18n="mdHistoryBody"></p>
+      </div>
     </div>
   </details>
 
@@ -797,7 +838,7 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
   <span class="footer-disclaimer" data-i18n="footerDisclaimer">Independent, unofficial tool. Not affiliated with Lichess.</span>
 
   <div class="footer-links">
-    <a href="https://github.com/MeowDev1011/Lichess-Marckdown-Studio-?tab=readme-ov-file#" target="_blank" rel="noopener noreferrer">
+    <a href="https://github.com/MeowDev1011/Lichess-Marckdown-Studio-/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
       <svg><use href="#i-scale"/></svg>
       <span data-i18n="footerLicense">MIT License</span>
     </a>
@@ -859,6 +900,12 @@ const I18N = {
     mdBold:"Bold", mdItalic:"Italic", mdBoldItalic:"Bold + Italic", mdStrike:"Strikethrough",
     mdUl:"Bullet list", mdOl:"Numbered list", mdQuote:"Quote",
     mdLink:"Link", mdCode:"Inline code", mdEmoji:"Emoji", mdHr:"Divider",
+    mdWhatTitle:"What is markdown?",
+    mdWhatBody:"Markdown is a lightweight markup language that lets you format plain text using simple characters. Instead of clicking buttons, you type symbols: ## makes a heading, **text** makes it bold, - starts a list. The text stays readable on its own, and any app that understands markdown turns it into formatted HTML.",
+    mdWhyTitle:"Why does Lichess accept it?",
+    mdWhyBody:"Lichess lets team captains write descriptions in markdown because it is safe, portable and easy to render. It runs on a strict, filtered version of the syntax — the same subset you see in the table above. That keeps the site fast, prevents HTML injection, and gives every team the same clean look regardless of device or theme.",
+    mdHistoryTitle:"A bit of history",
+    mdHistoryBody:"Markdown was created in 2004 by John Gruber, with help from Aaron Swartz. Their goal was simple: let people write for the web without having to type HTML tags. In 2014 it was standardised as CommonMark, and today it powers README files on GitHub, notes apps like Obsidian, forum posts, chat apps, and the small description box of a Lichess team.",
     q4:"How do I share a section?",
     a4:"Click the slug tag on any FAQ card (for example #faq-markdown-structure). The full URL with that anchor is copied to your clipboard. Paste it anywhere and the page will jump straight to that card.",
     q5:"Does it work offline?",
@@ -913,6 +960,12 @@ const I18N = {
     mdBold:"Negrita", mdItalic:"Cursiva", mdBoldItalic:"Negrita + cursiva", mdStrike:"Tachado",
     mdUl:"Lista con viñetas", mdOl:"Lista numerada", mdQuote:"Cita",
     mdLink:"Enlace", mdCode:"Código en línea", mdEmoji:"Emoji", mdHr:"Divisor",
+    mdWhatTitle:"¿Qué es markdown?",
+    mdWhatBody:"Markdown es un lenguaje de marcado ligero que permite dar formato a texto plano usando caracteres simples. En vez de pulsar botones, escribes símbolos: ## crea un título, **texto** lo pone en negrita, - empieza una lista. El texto se sigue leyendo tal cual, y cualquier aplicación que entienda markdown lo transforma en HTML con formato.",
+    mdWhyTitle:"¿Por qué lo acepta Lichess?",
+    mdWhyBody:"Lichess deja que los capitanes escriban las descripciones de sus equipos en markdown porque es seguro, portátil y fácil de renderizar. Usa una versión estricta y filtrada del lenguaje — el mismo subconjunto que ves en la tabla de arriba. Eso mantiene la web rápida, evita inyecciones de HTML y da a todos los equipos un aspecto limpio e igual sin importar el dispositivo ni el tema usado.",
+    mdHistoryTitle:"Un poco de historia",
+    mdHistoryBody:"Markdown lo creó John Gruber en 2004, con ayuda de Aaron Swartz. Su objetivo era sencillo: permitir que la gente escribiera para la web sin tener que teclear etiquetas HTML. En 2014 se estandarizó como CommonMark, y hoy en día da vida a los archivos README de GitHub, apps de notas como Obsidian, publicaciones de foros, apps de mensajería y la pequeña caja de descripción de un equipo de Lichess.",
     q4:"¿Cómo comparto una sección?",
     a4:"Haz clic en la etiqueta slug de cualquier tarjeta (por ejemplo #faq-markdown-structure). Se copia la URL completa con ese ancla. Pégala donde quieras y la página saltará directo a esa tarjeta.",
     q5:"¿Funciona sin conexión?",
@@ -967,6 +1020,12 @@ const I18N = {
     mdBold:"Gras", mdItalic:"Italique", mdBoldItalic:"Gras + italique", mdStrike:"Barré",
     mdUl:"Liste à puces", mdOl:"Liste numérotée", mdQuote:"Citation",
     mdLink:"Lien", mdCode:"Code en ligne", mdEmoji:"Emoji", mdHr:"Séparateur",
+    mdWhatTitle:"Qu'est-ce que le markdown ?",
+    mdWhatBody:"Le markdown est un langage de balisage léger qui permet de mettre en forme du texte brut avec des caractères simples. Au lieu de cliquer sur des boutons, vous tapez des symboles : ## crée un titre, **texte** le met en gras, - commence une liste. Le texte reste lisible tel quel, et toute application qui comprend le markdown le transforme en HTML mis en forme.",
+    mdWhyTitle:"Pourquoi Lichess l'accepte-t-il ?",
+    mdWhyBody:"Lichess permet aux capitaines d'écrire les descriptions d'équipes en markdown car c'est sûr, portable et facile à afficher. Il utilise une version stricte et filtrée du langage — le même sous-ensemble que celui du tableau ci-dessus. Cela garde le site rapide, empêche l'injection de HTML et donne à chaque équipe le même aspect propre quel que soit l'appareil ou le thème utilisé.",
+    mdHistoryTitle:"Un peu d'histoire",
+    mdHistoryBody:"Le markdown a été créé en 2004 par John Gruber, avec l'aide d'Aaron Swartz. Leur objectif était simple : permettre aux gens d'écrire pour le web sans avoir à taper des balises HTML. En 2014, il a été normalisé sous le nom de CommonMark, et aujourd'hui il alimente les fichiers README sur GitHub, des applications de notes comme Obsidian, des publications de forum, des applications de messagerie et la petite zone de description d'une équipe Lichess.",
     q4:"Comment partager une section ?",
     a4:"Cliquez sur le slug d'une carte (par exemple #faq-markdown-structure). L'URL complète est copiée.",
     q5:"Fonctionne-t-il hors ligne ?",
@@ -1021,6 +1080,12 @@ const I18N = {
     mdBold:"Fett", mdItalic:"Kursiv", mdBoldItalic:"Fett + Kursiv", mdStrike:"Durchgestrichen",
     mdUl:"Aufzählung", mdOl:"Nummerierte Liste", mdQuote:"Zitat",
     mdLink:"Link", mdCode:"Inline-Code", mdEmoji:"Emoji", mdHr:"Trennlinie",
+    mdWhatTitle:"Was ist Markdown?",
+    mdWhatBody:"Markdown ist eine leichte Auszeichnungssprache, mit der man reinen Text über einfache Zeichen formatieren kann. Statt auf Schaltflächen zu klicken, tippt man Symbole: ## erzeugt eine Überschrift, **Text** macht ihn fett, - beginnt eine Liste. Der Text bleibt für sich lesbar, und jede App, die Markdown versteht, wandelt ihn in formatiertes HTML um.",
+    mdWhyTitle:"Warum akzeptiert Lichess es?",
+    mdWhyBody:"Lichess lässt Teamkapitäne Beschreibungen in Markdown schreiben, weil es sicher, portabel und leicht darzustellen ist. Es verwendet eine strikte, gefilterte Version der Syntax — dieselbe Teilmenge wie in der Tabelle oben. Das hält die Seite schnell, verhindert HTML-Injection und gibt jedem Team das gleiche saubere Aussehen, egal auf welchem Gerät oder in welchem Theme.",
+    mdHistoryTitle:"Ein Stück Geschichte",
+    mdHistoryBody:"Markdown wurde 2004 von John Gruber mit Hilfe von Aaron Swartz entwickelt. Ihr Ziel war einfach: Menschen sollten für das Web schreiben können, ohne HTML-Tags tippen zu müssen. 2014 wurde es als CommonMark standardisiert, und heute treibt es README-Dateien auf GitHub an, Notiz-Apps wie Obsidian, Forenbeiträge, Chat-Apps und das kleine Beschreibungsfeld eines Lichess-Teams.",
     q4:"Wie teile ich einen Abschnitt?",
     a4:"Klicke auf den Slug einer Karte (z. B. #faq-markdown-structure). Die vollständige URL wird kopiert.",
     q5:"Funktioniert es offline?",
@@ -1075,6 +1140,12 @@ const I18N = {
     mdBold:"Negrito", mdItalic:"Itálico", mdBoldItalic:"Negrito + itálico", mdStrike:"Riscado",
     mdUl:"Lista com marcadores", mdOl:"Lista numerada", mdQuote:"Citação",
     mdLink:"Link", mdCode:"Código em linha", mdEmoji:"Emoji", mdHr:"Divisor",
+    mdWhatTitle:"O que é markdown?",
+    mdWhatBody:"Markdown é uma linguagem de marcação leve que permite formatar texto simples usando caracteres simples. Em vez de clicar em botões, você digita símbolos: ## cria um título, **texto** deixa em negrito, - inicia uma lista. O texto continua legível por si só, e qualquer aplicativo que entenda markdown o transforma em HTML formatado.",
+    mdWhyTitle:"Por que o Lichess aceita?",
+    mdWhyBody:"O Lichess permite que capitães de equipe escrevam descrições em markdown porque é seguro, portátil e fácil de renderizar. Ele usa uma versão estrita e filtrada da sintaxe — o mesmo subconjunto que você vê na tabela acima. Isso mantém o site rápido, evita injeção de HTML e dá a cada equipe a mesma aparência limpa, independentemente do dispositivo ou tema.",
+    mdHistoryTitle:"Um pouco de história",
+    mdHistoryBody:"O markdown foi criado em 2004 por John Gruber, com a ajuda de Aaron Swartz. O objetivo era simples: permitir que as pessoas escrevessem para a web sem precisar digitar tags HTML. Em 2014 foi padronizado como CommonMark, e hoje alimenta arquivos README no GitHub, apps de notas como Obsidian, posts de fórum, apps de mensagens e a pequena caixa de descrição de uma equipe no Lichess.",
     q4:"Como compartilho uma seção?",
     a4:"Clique no slug de qualquer cartão (por exemplo #faq-markdown-structure). A URL completa é copiada.",
     q5:"Funciona offline?",
