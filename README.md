@@ -2,8 +2,7 @@
 
 A visual editor and converter for [Lichess](https://lichess.org) team biographies. Write your bio like in any text editor, insert emojis with your keyboard, and on export they are automatically converted to the HTML entities that Lichess understands (`&#128512;`).
 
-🌐 **Live demo:** https://meowdev1011.github.io/Lichess-Marckdown-Studio/
-
+🌐 **Live demo:** https://meowdev1011.github.io/Lichess-Marckdown-Studio-/
 ---
 
 ## ✨ Features
