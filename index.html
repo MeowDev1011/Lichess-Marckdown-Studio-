@@ -412,7 +412,6 @@ label .req{color:var(--red);margin-left:3px;}
 .md-render hr{border:none;border-top:1px solid var(--border-strong);margin:4px 0;}
 .md-render a{text-decoration:underline;}
 
-/* ===== Info añadida bajo la tabla de markdown ===== */
 .md-info{
   margin-top:22px;
   padding-top:16px;
@@ -525,7 +524,6 @@ footer .footer-credit a:hover{text-decoration:underline;}
     <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
     <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
-    <symbol id="i-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></symbol>
     <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 21h14"/><path d="M6 8l-3 6h6z"/><path d="M18 8l-3 6h6z"/><path d="M6 8l6-2 6 2"/></symbol>
     <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5 3.3 9.3 7.8 10.8.6.1.8-.3.8-.6v-2c-3.2.7-3.8-1.4-3.8-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.8-5.8 7.8-10.8C23.5 5.7 18.3.5 12 .5z"/></symbol>
   </defs>
@@ -821,16 +819,6 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
     <div class="body" data-i18n="a4"></div>
   </details>
 
-  <details class="faq" id="faq-offline-browser">
-    <summary>
-      <span class="num"><svg><use href="#i-offline"/></svg></span>
-      <span class="title" data-i18n="q5">Does it work offline?</span>
-      <span class="anchor" onclick="copyAnchor(event,'#faq-offline-browser')">#faq-offline-browser</span>
-      <svg class="icon chev"><use href="#i-chev"/></svg>
-    </summary>
-    <div class="body" data-i18n="a5"></div>
-  </details>
-
 </main>
 
 <footer>
@@ -908,8 +896,6 @@ const I18N = {
     mdHistoryBody:"Markdown was created in 2004 by John Gruber, with help from Aaron Swartz. Their goal was simple: let people write for the web without having to type HTML tags. In 2014 it was standardised as CommonMark, and today it powers README files on GitHub, notes apps like Obsidian, forum posts, chat apps, and the small description box of a Lichess team.",
     q4:"How do I share a section?",
     a4:"Click the slug tag on any FAQ card (for example #faq-markdown-structure). The full URL with that anchor is copied to your clipboard. Paste it anywhere and the page will jump straight to that card.",
-    q5:"Does it work offline?",
-    a5:"Yes. Everything runs locally with no network calls. On load the page reads navigator.language to pick a language and prefers-color-scheme to pick light or dark mode. Blue mode is manual only — press the theme button to cycle.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Independent, unofficial tool. Not affiliated with Lichess.",
     footerLicense:"MIT License",
@@ -968,8 +954,6 @@ const I18N = {
     mdHistoryBody:"Markdown lo creó John Gruber en 2004, con ayuda de Aaron Swartz. Su objetivo era sencillo: permitir que la gente escribiera para la web sin tener que teclear etiquetas HTML. En 2014 se estandarizó como CommonMark, y hoy en día da vida a los archivos README de GitHub, apps de notas como Obsidian, publicaciones de foros, apps de mensajería y la pequeña caja de descripción de un equipo de Lichess.",
     q4:"¿Cómo comparto una sección?",
     a4:"Haz clic en la etiqueta slug de cualquier tarjeta (por ejemplo #faq-markdown-structure). Se copia la URL completa con ese ancla. Pégala donde quieras y la página saltará directo a esa tarjeta.",
-    q5:"¿Funciona sin conexión?",
-    a5:"Sí. Todo se ejecuta localmente sin llamadas de red. Al cargar lee navigator.language para elegir idioma y prefers-color-scheme para elegir claro u oscuro. El modo azul es solo manual — pulsa el botón de tema para ciclar.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Herramienta independiente y no oficial. Sin afiliación con Lichess.",
     footerLicense:"Licencia MIT",
@@ -1028,8 +1012,6 @@ const I18N = {
     mdHistoryBody:"Le markdown a été créé en 2004 par John Gruber, avec l'aide d'Aaron Swartz. Leur objectif était simple : permettre aux gens d'écrire pour le web sans avoir à taper des balises HTML. En 2014, il a été normalisé sous le nom de CommonMark, et aujourd'hui il alimente les fichiers README sur GitHub, des applications de notes comme Obsidian, des publications de forum, des applications de messagerie et la petite zone de description d'une équipe Lichess.",
     q4:"Comment partager une section ?",
     a4:"Cliquez sur le slug d'une carte (par exemple #faq-markdown-structure). L'URL complète est copiée.",
-    q5:"Fonctionne-t-il hors ligne ?",
-    a5:"Oui. Tout s'exécute localement. Au chargement la page lit navigator.language et prefers-color-scheme. Le mode bleu est uniquement manuel.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Outil indépendant et non officiel. Non affilié à Lichess.",
     footerLicense:"Licence MIT",
@@ -1088,8 +1070,6 @@ const I18N = {
     mdHistoryBody:"Markdown wurde 2004 von John Gruber mit Hilfe von Aaron Swartz entwickelt. Ihr Ziel war einfach: Menschen sollten für das Web schreiben können, ohne HTML-Tags tippen zu müssen. 2014 wurde es als CommonMark standardisiert, und heute treibt es README-Dateien auf GitHub an, Notiz-Apps wie Obsidian, Forenbeiträge, Chat-Apps und das kleine Beschreibungsfeld eines Lichess-Teams.",
     q4:"Wie teile ich einen Abschnitt?",
     a4:"Klicke auf den Slug einer Karte (z. B. #faq-markdown-structure). Die vollständige URL wird kopiert.",
-    q5:"Funktioniert es offline?",
-    a5:"Ja. Alles läuft lokal. Beim Laden liest die Seite navigator.language und prefers-color-scheme. Der blaue Modus ist nur manuell.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Unabhängiges, inoffizielles Tool. Nicht mit Lichess verbunden.",
     footerLicense:"MIT-Lizenz",
@@ -1148,8 +1128,6 @@ const I18N = {
     mdHistoryBody:"O markdown foi criado em 2004 por John Gruber, com a ajuda de Aaron Swartz. O objetivo era simples: permitir que as pessoas escrevessem para a web sem precisar digitar tags HTML. Em 2014 foi padronizado como CommonMark, e hoje alimenta arquivos README no GitHub, apps de notas como Obsidian, posts de fórum, apps de mensagens e a pequena caixa de descrição de uma equipe no Lichess.",
     q4:"Como compartilho uma seção?",
     a4:"Clique no slug de qualquer cartão (por exemplo #faq-markdown-structure). A URL completa é copiada.",
-    q5:"Funciona offline?",
-    a5:"Sim. Tudo roda localmente. Ao carregar, a página lê navigator.language e prefers-color-scheme. O modo azul é apenas manual.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Ferramenta independente e não oficial. Sem afiliação com Lichess.",
     footerLicense:"Licença MIT",
