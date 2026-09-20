@@ -285,7 +285,6 @@ label .req{color:var(--red);margin-left:3px;}
 .rendered a{color:var(--accent);text-decoration:underline;}
 .rendered b,.rendered strong{font-weight:700;}
 .rendered i,.rendered em{font-style:italic;}
-.rendered s,.rendered del{text-decoration:line-through;}
 
 .faq{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius);margin:8px 0;overflow:hidden;transition:border-color .15s,background .2s;}
@@ -305,10 +304,6 @@ label .req{color:var(--red);margin-left:3px;}
 .faq .body{padding:0 18px 16px 60px;color:var(--muted);font-size:.88rem;line-height:1.65;}
 .faq .body code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);
   padding:1px 5px;border-radius:3px;color:var(--fg);}
-.anchor{font-family:var(--mono);font-size:.7rem;color:var(--muted);
-  border:1px solid var(--border);border-radius:4px;padding:2px 7px;
-  cursor:pointer;transition:all .15s;flex-shrink:0;white-space:nowrap;}
-.anchor:hover{color:var(--accent);border-color:var(--accent);}
 
 .diagram{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
@@ -523,7 +518,6 @@ footer .footer-credit a:hover{text-decoration:underline;}
     <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17h14"/></symbol>
     <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
     <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
-    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
     <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 21h14"/><path d="M6 8l-3 6h6z"/><path d="M18 8l-3 6h6z"/><path d="M6 8l6-2 6 2"/></symbol>
     <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5 3.3 9.3 7.8 10.8.6.1.8-.3.8-.6v-2c-3.2.7-3.8-1.4-3.8-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.8-5.8 7.8-10.8C23.5 5.7 18.3.5 12 .5z"/></symbol>
   </defs>
@@ -562,7 +556,7 @@ footer .footer-credit a:hover{text-decoration:underline;}
   <h1 data-i18n="h1">Team biography editor for Lichess</h1>
   <p class="lead" data-i18n="lead">Write your team bio. Insert emojis with your keyboard; on export they become HTML entities. Headings export as ##.</p>
 
-  <h2 id="editor" data-i18n="editorTitle">Editor</h2>
+  <h2 data-i18n="editorTitle">Editor</h2>
 
   <div class="card">
     <label data-i18n="labelTeamName">Team name <span class="req">*</span></label>
@@ -646,7 +640,7 @@ footer .footer-credit a:hover{text-decoration:underline;}
     <div class="output" id="mdOut" data-empty="true"></div>
   </div>
 
-  <h2 id="converter" data-i18n="converterTitle">Converter</h2>
+  <h2 data-i18n="converterTitle">Converter</h2>
   <div class="card">
     <div class="grid2">
       <div>
@@ -684,7 +678,7 @@ footer .footer-credit a:hover{text-decoration:underline;}
     </div>
   </div>
 
-  <h2 id="test" data-i18n="testTitle">Preview area</h2>
+  <h2 data-i18n="testTitle">Preview area</h2>
   <div class="card">
     <p class="muted" data-i18n="testHint">Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.</p>
 
@@ -706,14 +700,13 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
     <div class="rendered" id="previewOut"></div>
   </div>
 
-  <h2 id="faq" data-i18n="faqTitle">FAQ</h2>
-  <p class="muted" data-i18n="faqHint">Click the # slug to copy a direct link to that card.</p>
+  <h2 data-i18n="faqTitle">FAQ</h2>
+  <p class="muted" data-i18n="faqHint">Common questions about the tool and about how Lichess handles markdown and emojis.</p>
 
-  <details class="faq" id="faq-how-conversion-works" open>
+  <details class="faq" open>
     <summary>
       <span class="num"><svg><use href="#i-help"/></svg></span>
       <span class="title" data-i18n="q1">How does the conversion work?</span>
-      <span class="anchor" onclick="copyAnchor(event,'#faq-how-conversion-works')">#faq-how-conversion-works</span>
       <svg class="icon chev"><use href="#i-chev"/></svg>
     </summary>
     <div class="body">
@@ -747,21 +740,19 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
     </div>
   </details>
 
-  <details class="faq" id="faq-why-decimal">
+  <details class="faq">
     <summary>
       <span class="num"><svg><use href="#i-info"/></svg></span>
       <span class="title" data-i18n="q2">Why HTML entities instead of emojis?</span>
-      <span class="anchor" onclick="copyAnchor(event,'#faq-why-decimal')">#faq-why-decimal</span>
       <svg class="icon chev"><use href="#i-chev"/></svg>
     </summary>
     <div class="body" data-i18n="a2"></div>
   </details>
 
-  <details class="faq" id="faq-markdown-structure">
+  <details class="faq">
     <summary>
       <span class="num"><svg><use href="#i-book"/></svg></span>
       <span class="title" data-i18n="q3">What markdown does Lichess use?</span>
-      <span class="anchor" onclick="copyAnchor(event,'#faq-markdown-structure')">#faq-markdown-structure</span>
       <svg class="icon chev"><use href="#i-chev"/></svg>
     </summary>
     <div class="body">
@@ -784,10 +775,8 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
             <tr><td data-i18n="mdBold">Bold</td><td><code>**Text**</code></td><td><span class="md-render"><b>Text</b></span></td></tr>
             <tr><td data-i18n="mdItalic">Italic</td><td><code>*Text*</code></td><td><span class="md-render"><i>Text</i></span></td></tr>
             <tr><td data-i18n="mdBoldItalic">Bold + Italic</td><td><code>***Text***</code></td><td><span class="md-render"><b><i>Text</i></b></span></td></tr>
-            <tr><td data-i18n="mdStrike">Strikethrough</td><td><code>~~Text~~</code></td><td><span class="md-render"><s>Text</s></span></td></tr>
             <tr><td data-i18n="mdUl">Bullet list</td><td><code>- Item</code></td><td><span class="md-render"><ul><li>Item</li></ul></span></td></tr>
             <tr><td data-i18n="mdOl">Numbered list</td><td><code>1. Item</code></td><td><span class="md-render"><ol><li>Item</li></ol></span></td></tr>
-            <tr><td data-i18n="mdQuote">Quote</td><td><code>&gt; Text</code></td><td><span class="md-render" style="border-left:3px solid var(--accent);padding-left:10px;color:var(--muted)">Text</span></td></tr>
             <tr><td data-i18n="mdLink">Link</td><td><code>[Text](url)</code></td><td><span class="md-render"><a href="#top">Text</a></span></td></tr>
             <tr><td data-i18n="mdCode">Inline code</td><td><code>`code`</code></td><td><span class="md-render"><code>code</code></span></td></tr>
             <tr><td data-i18n="mdHr">Divider</td><td><code>---</code></td><td><span class="md-render"><hr></span></td></tr>
@@ -807,16 +796,6 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
         <p data-i18n="mdHistoryBody"></p>
       </div>
     </div>
-  </details>
-
-  <details class="faq" id="faq-share-section">
-    <summary>
-      <span class="num"><svg><use href="#i-link"/></svg></span>
-      <span class="title" data-i18n="q4">How do I share a section?</span>
-      <span class="anchor" onclick="copyAnchor(event,'#faq-share-section')">#faq-share-section</span>
-      <svg class="icon chev"><use href="#i-chev"/></svg>
-    </summary>
-    <div class="body" data-i18n="a4"></div>
   </details>
 
 </main>
@@ -872,7 +851,7 @@ const I18N = {
     testHint:"Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.",
     labelPreviewInput:"Bio source (markdown + entities)",
     labelPreviewRender:"Rendered preview",
-    faqTitle:"FAQ", faqHint:"Click the # slug to copy a direct link to that card.",
+    faqTitle:"FAQ", faqHint:"Common questions about the tool and about how Lichess handles markdown and emojis.",
     q1:"How does the conversion work?",
     diagOpenTitle:"Opens", diagOpen:"Marks the start",
     diagCodeTitle:"Number", diagCode:"Identifies the emoji",
@@ -885,8 +864,8 @@ const I18N = {
     a3:"Lichess renders a small subset of markdown in team descriptions. The table below lists every supported element, its syntax, and how it renders.",
     mdName:"Name", mdSyntax:"Markdown", mdRenders:"Renders as",
     mdH2:"Heading 2", mdH3:"Heading 3", mdH4:"Heading 4", mdH5:"Heading 5", mdH6:"Heading 6",
-    mdBold:"Bold", mdItalic:"Italic", mdBoldItalic:"Bold + Italic", mdStrike:"Strikethrough",
-    mdUl:"Bullet list", mdOl:"Numbered list", mdQuote:"Quote",
+    mdBold:"Bold", mdItalic:"Italic", mdBoldItalic:"Bold + Italic",
+    mdUl:"Bullet list", mdOl:"Numbered list",
     mdLink:"Link", mdCode:"Inline code", mdEmoji:"Emoji", mdHr:"Divider",
     mdWhatTitle:"What is markdown?",
     mdWhatBody:"Markdown is a lightweight markup language that lets you format plain text using simple characters. Instead of clicking buttons, you type symbols: ## makes a heading, **text** makes it bold, - starts a list. The text stays readable on its own, and any app that understands markdown turns it into formatted HTML.",
@@ -894,8 +873,6 @@ const I18N = {
     mdWhyBody:"Lichess lets team captains write descriptions in markdown because it is safe, portable and easy to render. It runs on a strict, filtered version of the syntax — the same subset you see in the table above. That keeps the site fast, prevents HTML injection, and gives every team the same clean look regardless of device or theme.",
     mdHistoryTitle:"A bit of history",
     mdHistoryBody:"Markdown was created in 2004 by John Gruber, with help from Aaron Swartz. Their goal was simple: let people write for the web without having to type HTML tags. In 2014 it was standardised as CommonMark, and today it powers README files on GitHub, notes apps like Obsidian, forum posts, chat apps, and the small description box of a Lichess team.",
-    q4:"How do I share a section?",
-    a4:"Click the slug tag on any FAQ card (for example #faq-markdown-structure). The full URL with that anchor is copied to your clipboard. Paste it anywhere and the page will jump straight to that card.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Independent, unofficial tool. Not affiliated with Lichess.",
     footerLicense:"MIT License",
@@ -930,7 +907,7 @@ const I18N = {
     testHint:"Pega una bio con markdown (##, **negrita**, listas…) y entidades HTML (&#128512;) — se renderiza abajo tal como la mostraría Lichess.",
     labelPreviewInput:"Bio de origen (markdown + entidades)",
     labelPreviewRender:"Vista previa renderizada",
-    faqTitle:"Preguntas frecuentes", faqHint:"Haz clic en el slug # para copiar el enlace directo a esa tarjeta.",
+    faqTitle:"Preguntas frecuentes", faqHint:"Preguntas comunes sobre la herramienta y sobre cómo Lichess maneja markdown y emojis.",
     q1:"¿Cómo funciona la conversión?",
     diagOpenTitle:"Abre", diagOpen:"Marca el inicio",
     diagCodeTitle:"Número", diagCode:"Identifica el emoji",
@@ -943,8 +920,8 @@ const I18N = {
     a3:"Lichess renderiza un subconjunto pequeño de markdown en las descripciones de equipos. La tabla de abajo muestra todos los elementos soportados, su sintaxis y cómo se ven.",
     mdName:"Nombre", mdSyntax:"Markdown", mdRenders:"Se ve como",
     mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
-    mdBold:"Negrita", mdItalic:"Cursiva", mdBoldItalic:"Negrita + cursiva", mdStrike:"Tachado",
-    mdUl:"Lista con viñetas", mdOl:"Lista numerada", mdQuote:"Cita",
+    mdBold:"Negrita", mdItalic:"Cursiva", mdBoldItalic:"Negrita + cursiva",
+    mdUl:"Lista con viñetas", mdOl:"Lista numerada",
     mdLink:"Enlace", mdCode:"Código en línea", mdEmoji:"Emoji", mdHr:"Divisor",
     mdWhatTitle:"¿Qué es markdown?",
     mdWhatBody:"Markdown es un lenguaje de marcado ligero que permite dar formato a texto plano usando caracteres simples. En vez de pulsar botones, escribes símbolos: ## crea un título, **texto** lo pone en negrita, - empieza una lista. El texto se sigue leyendo tal cual, y cualquier aplicación que entienda markdown lo transforma en HTML con formato.",
@@ -952,8 +929,6 @@ const I18N = {
     mdWhyBody:"Lichess deja que los capitanes escriban las descripciones de sus equipos en markdown porque es seguro, portátil y fácil de renderizar. Usa una versión estricta y filtrada del lenguaje — el mismo subconjunto que ves en la tabla de arriba. Eso mantiene la web rápida, evita inyecciones de HTML y da a todos los equipos un aspecto limpio e igual sin importar el dispositivo ni el tema usado.",
     mdHistoryTitle:"Un poco de historia",
     mdHistoryBody:"Markdown lo creó John Gruber en 2004, con ayuda de Aaron Swartz. Su objetivo era sencillo: permitir que la gente escribiera para la web sin tener que teclear etiquetas HTML. En 2014 se estandarizó como CommonMark, y hoy en día da vida a los archivos README de GitHub, apps de notas como Obsidian, publicaciones de foros, apps de mensajería y la pequeña caja de descripción de un equipo de Lichess.",
-    q4:"¿Cómo comparto una sección?",
-    a4:"Haz clic en la etiqueta slug de cualquier tarjeta (por ejemplo #faq-markdown-structure). Se copia la URL completa con ese ancla. Pégala donde quieras y la página saltará directo a esa tarjeta.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Herramienta independiente y no oficial. Sin afiliación con Lichess.",
     footerLicense:"Licencia MIT",
@@ -988,7 +963,7 @@ const I18N = {
     testHint:"Collez une bio avec du markdown (##, **gras**, listes…) et des entités HTML (&#128512;) — le rendu s'affiche en dessous comme sur Lichess.",
     labelPreviewInput:"Bio source (markdown + entités)",
     labelPreviewRender:"Aperçu rendu",
-    faqTitle:"FAQ", faqHint:"Cliquez sur le slug # pour copier le lien direct vers cette carte.",
+    faqTitle:"FAQ", faqHint:"Questions courantes sur l'outil et sur la façon dont Lichess gère le markdown et les emojis.",
     q1:"Comment fonctionne la conversion ?",
     diagOpenTitle:"Ouvre", diagOpen:"Marque le début",
     diagCodeTitle:"Numéro", diagCode:"Identifie l'emoji",
@@ -1001,8 +976,8 @@ const I18N = {
     a3:"Lichess rend un petit sous-ensemble de markdown dans les descriptions d'équipes. Le tableau ci-dessous liste chaque élément supporté, sa syntaxe et son rendu.",
     mdName:"Nom", mdSyntax:"Markdown", mdRenders:"Rendu",
     mdH2:"Titre 2", mdH3:"Titre 3", mdH4:"Titre 4", mdH5:"Titre 5", mdH6:"Titre 6",
-    mdBold:"Gras", mdItalic:"Italique", mdBoldItalic:"Gras + italique", mdStrike:"Barré",
-    mdUl:"Liste à puces", mdOl:"Liste numérotée", mdQuote:"Citation",
+    mdBold:"Gras", mdItalic:"Italique", mdBoldItalic:"Gras + italique",
+    mdUl:"Liste à puces", mdOl:"Liste numérotée",
     mdLink:"Lien", mdCode:"Code en ligne", mdEmoji:"Emoji", mdHr:"Séparateur",
     mdWhatTitle:"Qu'est-ce que le markdown ?",
     mdWhatBody:"Le markdown est un langage de balisage léger qui permet de mettre en forme du texte brut avec des caractères simples. Au lieu de cliquer sur des boutons, vous tapez des symboles : ## crée un titre, **texte** le met en gras, - commence une liste. Le texte reste lisible tel quel, et toute application qui comprend le markdown le transforme en HTML mis en forme.",
@@ -1010,8 +985,6 @@ const I18N = {
     mdWhyBody:"Lichess permet aux capitaines d'écrire les descriptions d'équipes en markdown car c'est sûr, portable et facile à afficher. Il utilise une version stricte et filtrée du langage — le même sous-ensemble que celui du tableau ci-dessus. Cela garde le site rapide, empêche l'injection de HTML et donne à chaque équipe le même aspect propre quel que soit l'appareil ou le thème utilisé.",
     mdHistoryTitle:"Un peu d'histoire",
     mdHistoryBody:"Le markdown a été créé en 2004 par John Gruber, avec l'aide d'Aaron Swartz. Leur objectif était simple : permettre aux gens d'écrire pour le web sans avoir à taper des balises HTML. En 2014, il a été normalisé sous le nom de CommonMark, et aujourd'hui il alimente les fichiers README sur GitHub, des applications de notes comme Obsidian, des publications de forum, des applications de messagerie et la petite zone de description d'une équipe Lichess.",
-    q4:"Comment partager une section ?",
-    a4:"Cliquez sur le slug d'une carte (par exemple #faq-markdown-structure). L'URL complète est copiée.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Outil indépendant et non officiel. Non affilié à Lichess.",
     footerLicense:"Licence MIT",
@@ -1046,7 +1019,7 @@ const I18N = {
     testHint:"Füge eine Bio mit Markdown (##, **fett**, Listen…) und HTML-Entities (&#128512;) ein — sie wird unten so gerendert, wie Lichess sie anzeigt.",
     labelPreviewInput:"Bio-Quelle (Markdown + Entities)",
     labelPreviewRender:"Gerenderte Vorschau",
-    faqTitle:"FAQ", faqHint:"Klicke auf den #-Slug, um den direkten Link zu kopieren.",
+    faqTitle:"FAQ", faqHint:"Häufige Fragen zum Tool und dazu, wie Lichess mit Markdown und Emojis umgeht.",
     q1:"Wie funktioniert die Umwandlung?",
     diagOpenTitle:"Öffnet", diagOpen:"Markiert den Start",
     diagCodeTitle:"Nummer", diagCode:"Identifiziert das Emoji",
@@ -1059,8 +1032,8 @@ const I18N = {
     a3:"Lichess rendert eine kleine Markdown-Teilmenge in Teambeschreibungen. Die Tabelle unten listet jedes unterstützte Element, seine Syntax und sein Rendering.",
     mdName:"Name", mdSyntax:"Markdown", mdRenders:"Erscheint als",
     mdH2:"Überschrift 2", mdH3:"Überschrift 3", mdH4:"Überschrift 4", mdH5:"Überschrift 5", mdH6:"Überschrift 6",
-    mdBold:"Fett", mdItalic:"Kursiv", mdBoldItalic:"Fett + Kursiv", mdStrike:"Durchgestrichen",
-    mdUl:"Aufzählung", mdOl:"Nummerierte Liste", mdQuote:"Zitat",
+    mdBold:"Fett", mdItalic:"Kursiv", mdBoldItalic:"Fett + Kursiv",
+    mdUl:"Aufzählung", mdOl:"Nummerierte Liste",
     mdLink:"Link", mdCode:"Inline-Code", mdEmoji:"Emoji", mdHr:"Trennlinie",
     mdWhatTitle:"Was ist Markdown?",
     mdWhatBody:"Markdown ist eine leichte Auszeichnungssprache, mit der man reinen Text über einfache Zeichen formatieren kann. Statt auf Schaltflächen zu klicken, tippt man Symbole: ## erzeugt eine Überschrift, **Text** macht ihn fett, - beginnt eine Liste. Der Text bleibt für sich lesbar, und jede App, die Markdown versteht, wandelt ihn in formatiertes HTML um.",
@@ -1068,8 +1041,6 @@ const I18N = {
     mdWhyBody:"Lichess lässt Teamkapitäne Beschreibungen in Markdown schreiben, weil es sicher, portabel und leicht darzustellen ist. Es verwendet eine strikte, gefilterte Version der Syntax — dieselbe Teilmenge wie in der Tabelle oben. Das hält die Seite schnell, verhindert HTML-Injection und gibt jedem Team das gleiche saubere Aussehen, egal auf welchem Gerät oder in welchem Theme.",
     mdHistoryTitle:"Ein Stück Geschichte",
     mdHistoryBody:"Markdown wurde 2004 von John Gruber mit Hilfe von Aaron Swartz entwickelt. Ihr Ziel war einfach: Menschen sollten für das Web schreiben können, ohne HTML-Tags tippen zu müssen. 2014 wurde es als CommonMark standardisiert, und heute treibt es README-Dateien auf GitHub an, Notiz-Apps wie Obsidian, Forenbeiträge, Chat-Apps und das kleine Beschreibungsfeld eines Lichess-Teams.",
-    q4:"Wie teile ich einen Abschnitt?",
-    a4:"Klicke auf den Slug einer Karte (z. B. #faq-markdown-structure). Die vollständige URL wird kopiert.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Unabhängiges, inoffizielles Tool. Nicht mit Lichess verbunden.",
     footerLicense:"MIT-Lizenz",
@@ -1104,7 +1075,7 @@ const I18N = {
     testHint:"Cole uma bio com markdown (##, **negrito**, listas…) e entidades HTML (&#128512;) — renderiza abaixo como o Lichess mostraria.",
     labelPreviewInput:"Bio fonte (markdown + entidades)",
     labelPreviewRender:"Pré-visualização renderizada",
-    faqTitle:"Perguntas frequentes", faqHint:"Clique no slug # para copiar o link direto para aquele cartão.",
+    faqTitle:"Perguntas frequentes", faqHint:"Perguntas comuns sobre a ferramenta e sobre como o Lichess lida com markdown e emojis.",
     q1:"Como funciona a conversão?",
     diagOpenTitle:"Abre", diagOpen:"Marca o início",
     diagCodeTitle:"Número", diagCode:"Identifica o emoji",
@@ -1117,8 +1088,8 @@ const I18N = {
     a3:"O Lichess renderiza um pequeno subconjunto de markdown nas descrições de equipes. A tabela abaixo lista cada elemento suportado, sua sintaxe e como ele aparece.",
     mdName:"Nome", mdSyntax:"Markdown", mdRenders:"Aparece como",
     mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
-    mdBold:"Negrito", mdItalic:"Itálico", mdBoldItalic:"Negrito + itálico", mdStrike:"Riscado",
-    mdUl:"Lista com marcadores", mdOl:"Lista numerada", mdQuote:"Citação",
+    mdBold:"Negrito", mdItalic:"Itálico", mdBoldItalic:"Negrito + itálico",
+    mdUl:"Lista com marcadores", mdOl:"Lista numerada",
     mdLink:"Link", mdCode:"Código em linha", mdEmoji:"Emoji", mdHr:"Divisor",
     mdWhatTitle:"O que é markdown?",
     mdWhatBody:"Markdown é uma linguagem de marcação leve que permite formatar texto simples usando caracteres simples. Em vez de clicar em botões, você digita símbolos: ## cria um título, **texto** deixa em negrito, - inicia uma lista. O texto continua legível por si só, e qualquer aplicativo que entenda markdown o transforma em HTML formatado.",
@@ -1126,8 +1097,6 @@ const I18N = {
     mdWhyBody:"O Lichess permite que capitães de equipe escrevam descrições em markdown porque é seguro, portátil e fácil de renderizar. Ele usa uma versão estrita e filtrada da sintaxe — o mesmo subconjunto que você vê na tabela acima. Isso mantém o site rápido, evita injeção de HTML e dá a cada equipe a mesma aparência limpa, independentemente do dispositivo ou tema.",
     mdHistoryTitle:"Um pouco de história",
     mdHistoryBody:"O markdown foi criado em 2004 por John Gruber, com a ajuda de Aaron Swartz. O objetivo era simples: permitir que as pessoas escrevessem para a web sem precisar digitar tags HTML. Em 2014 foi padronizado como CommonMark, e hoje alimenta arquivos README no GitHub, apps de notas como Obsidian, posts de fórum, apps de mensagens e a pequena caixa de descrição de uma equipe no Lichess.",
-    q4:"Como compartilho uma seção?",
-    a4:"Clique no slug de qualquer cartão (por exemplo #faq-markdown-structure). A URL completa é copiada.",
     footer:"Lichess Markdown Studio",
     footerDisclaimer:"Ferramenta independente e não oficial. Sem afiliação com Lichess.",
     footerLicense:"Licença MIT",
@@ -1334,7 +1303,6 @@ function nodeToMarkdown(node){
     case "b": case "strong": return "**" + inner + "**";
     case "i": case "em":     return "*" + inner + "*";
     case "u":                return inner;
-    case "s": case "strike": case "del": return "~~" + inner + "~~";
     case "h1": return "\n# " + inner + "\n";
     case "h2": return "\n## " + inner + "\n";
     case "h3": return "\n### " + inner + "\n";
@@ -1343,7 +1311,6 @@ function nodeToMarkdown(node){
     case "h6": return "\n###### " + inner + "\n";
     case "p":  return "\n" + inner + "\n";
     case "br": return "\n";
-    case "blockquote": return "\n> " + inner.trim() + "\n";
     case "ul": case "ol": return "\n" + inner + "\n";
     case "li":{
       const parent = node.parentNode.tagName.toLowerCase();
@@ -1491,7 +1458,6 @@ function inlineMarkdown(s){
   s = s.replace(/\*\*\*([^*]+)\*\*\*/g, "<b><i>$1</i></b>");
   s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
   s = s.replace(/(^|[^*])\*([^*]+)\*/g, "$1<i>$2</i>");
-  s = s.replace(/~~([^~]+)~~/g, "<s>$1</s>");
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   return s;
@@ -1521,8 +1487,6 @@ function renderBio(source){
     if(m = line.match(/^#\s+(.*)$/)){ closeList(); out.push("<h1>" + inlineMarkdown(m[1]) + "</h1>"); continue; }
 
     if(/^\s*---+\s*$/.test(line)){ closeList(); out.push("<hr>"); continue; }
-
-    if(m = line.match(/^\s*>\s?(.*)$/)){ closeList(); out.push("<blockquote>" + inlineMarkdown(m[1]) + "</blockquote>"); continue; }
 
     if(m = line.match(/^\s*[-*]\s+(.*)$/)){
       if(listOpen !== "ul"){ closeList(); out.push("<ul>"); listOpen = "ul"; }
