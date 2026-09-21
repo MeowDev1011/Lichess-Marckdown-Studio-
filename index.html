@@ -590,7 +590,6 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
 
 [Visit Lichess](https://lichess.org)
 
-
 ---
 
 **Join us!**</textarea>
@@ -738,7 +737,7 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
   </div>
 </div>
 
-<!-- MODAL IMAGEN (texto alternativo) -->
+<!-- MODAL IMAGEN -->
 <div class="modal" id="imageModal">
   <div class="modal-box">
     <div class="modal-head">
@@ -764,7 +763,9 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
 
 <script>
 const LIMITS = { teamNameMin:3, teamNameMax:30, bioMin:30, bioMax:2000 };
-const IMGBB_TOKEN = "9626fadaa395bd842a5cf992f7303ce7";
+
+/* URL del Worker de Cloudflare (aquí vive tu token de ImgBB) */
+const UPLOAD_URL = "https://imgbb-uploader.cuentalichess89.workers.dev/";
 
 const I18N = {
   en:{
@@ -827,7 +828,7 @@ const I18N = {
     imageDefaultAlt:"Image",
     imageSelect:"Please select an image file.",
     imageUploading:"Uploading image…",
-    imageUploaded:"Image uploaded! Now add the alt text.",
+    imageUploaded:"Image uploaded and inserted!",
     imageError:"Image upload failed. Please try again."
   },
   es:{
@@ -890,7 +891,7 @@ const I18N = {
     imageDefaultAlt:"Image",
     imageSelect:"Selecciona una imagen.",
     imageUploading:"Subiendo imagen…",
-    imageUploaded:"¡Imagen subida! Ahora añade el texto alternativo.",
+    imageUploaded:"¡Imagen subida e insertada!",
     imageError:"La subida falló. Inténtalo de nuevo."
   },
   fr:{
@@ -953,7 +954,7 @@ const I18N = {
     imageDefaultAlt:"Image",
     imageSelect:"Veuillez sélectionner une image.",
     imageUploading:"Téléversement en cours…",
-    imageUploaded:"Image téléversée ! Ajoutez maintenant le texte alternatif.",
+    imageUploaded:"Image téléversée et insérée !",
     imageError:"Le téléversement a échoué. Réessayez."
   },
   de:{
@@ -1016,7 +1017,7 @@ const I18N = {
     imageDefaultAlt:"Image",
     imageSelect:"Bitte ein Bild auswählen.",
     imageUploading:"Bild wird hochgeladen…",
-    imageUploaded:"Bild hochgeladen! Jetzt den Alternativtext hinzufügen.",
+    imageUploaded:"Bild hochgeladen und eingefügt!",
     imageError:"Hochladen fehlgeschlagen. Bitte erneut versuchen."
   },
   pt:{
@@ -1079,7 +1080,7 @@ const I18N = {
     imageDefaultAlt:"Image",
     imageSelect:"Selecione uma imagem.",
     imageUploading:"Enviando imagem…",
-    imageUploaded:"Imagem enviada! Agora adicione o texto alternativo.",
+    imageUploaded:"Imagem enviada e inserida!",
     imageError:"Falha no envio. Tente novamente."
   }
 };
@@ -1105,7 +1106,6 @@ function applyLang(lang){
   updateTeamHint();
   updateCharCounter();
 }
-
 function detectBrowserLang(){
   const list = (navigator.languages && navigator.languages.length)
     ? navigator.languages : [navigator.language || "en"];
@@ -1141,16 +1141,13 @@ function applyTheme(theme){
   updateLogo(theme);
 }
 
-/* ---------- Validación de nombre ---------- */
+/* ---------- Validación ---------- */
 function validateTeamName(showError){
   const input = document.getElementById('teamName');
   const hint = document.getElementById('teamHint');
   const name = input.value.trim();
   const dict = I18N[currentLang];
-
-  let msg = dict.teamHint;
-  let ok = true;
-  let isError = false;
+  let msg = dict.teamHint, ok = true, isError = false;
 
   if(name.length === 0){ msg = dict.teamHint; ok = false; }
   else if(name.length < LIMITS.teamNameMin){ msg = dict.teamHintMin; ok = false; isError = true; }
@@ -1162,7 +1159,6 @@ function validateTeamName(showError){
   hint.classList.toggle("error-msg", isError);
   hint.classList.toggle("success-msg", ok && name.length > 0);
   input.classList.toggle("error", isError);
-
   if(showError && !ok && name.length > 0){
     input.classList.add("field-highlight");
     setTimeout(()=>input.classList.remove("field-highlight"), 1500);
@@ -1171,7 +1167,6 @@ function validateTeamName(showError){
 }
 function updateTeamHint(){ validateTeamName(false); }
 
-/* ---------- Contador ---------- */
 function getEditorText(){
   return (document.getElementById('bioEditor').textContent || "").trim();
 }
@@ -1190,14 +1185,12 @@ function updateCharCounter(){
   el.classList.toggle("warn", len > LIMITS.bioMax);
 }
 
-/* ---------- Bloqueo editor ---------- */
 function setEditorLocked(locked){
   editorUnlocked = !locked;
   const editor = document.getElementById('bioEditor');
   const toolbar = document.getElementById('toolbar');
   const overlay = document.getElementById('editorOverlay');
   const banner = document.getElementById('banner');
-
   editor.classList.toggle('locked', locked);
   toolbar.classList.toggle('locked', locked);
   overlay.classList.toggle('show', locked);
@@ -1276,12 +1269,10 @@ function confirmLink(){
   const text = document.getElementById('linkTextInput').value.trim();
   const url = document.getElementById('linkUrlInput').value.trim();
   if(!url){ showToast(I18N[currentLang].linkError); return; }
-
   editor.focus();
   const sel = window.getSelection();
   sel.removeAllRanges();
   if(savedRange) sel.addRange(savedRange);
-
   const finalText = text || url;
   document.execCommand('insertHTML', false,
     '<a href="' + url.replace(/"/g,'&quot;') + '" target="_blank" rel="noopener noreferrer">' + finalText + '</a>');
@@ -1290,7 +1281,7 @@ function confirmLink(){
 }
 document.getElementById('linkBtn').addEventListener('click', openLinkModal);
 
-/* ---------- Subida de imagen a ImgBB + Alt ---------- */
+/* ---------- Subida de imagen (vía Worker Cloudflare → ImgBB) ---------- */
 const imageInput = document.getElementById('imageInput');
 
 document.getElementById('imageBtn').addEventListener('click', ()=>{
@@ -1307,22 +1298,21 @@ imageInput.addEventListener('change', async e=>{
   if(!file.type.startsWith("image/")){ showToast(I18N[currentLang].imageSelect); return; }
 
   showToast(I18N[currentLang].imageUploading);
+
   try{
     const fd = new FormData();
     fd.append('image', file);
 
-    const res = await fetch('https://api.imgbb.com/1/upload?key=' + IMGGB_TOKEN, {
+    const res = await fetch(UPLOAD_URL, {
       method: 'POST',
       body: fd
     });
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if(!data.success || !data.data || !data.data.url){
-      throw new Error('Bad response');
-    }
-    pendingImageUrl = data.data.url;
 
-    // Abrir modal para pedir el alt text
+    const data = await res.json();
+    if(!data.url) throw new Error('Upload failed');
+
+    pendingImageUrl = data.url;
+
     document.getElementById('imageAltInput').value = "";
     document.getElementById('imageModal').classList.add('show');
     setTimeout(()=>document.getElementById('imageAltInput').focus(), 50);
@@ -1446,8 +1436,7 @@ function onExportClick(){
   showToast(I18N[currentLang].mdCopied);
 }
 function slugifyTeamName(name){
-  return name
-    .toLowerCase()
+  return name.toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
@@ -1535,7 +1524,7 @@ function fallbackCopy(txt, msg){
   showToast(msg);
 }
 
-/* ---------- Preview markdown ---------- */
+/* ---------- Preview ---------- */
 function escapeHTML(s){
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -1573,7 +1562,6 @@ function renderBio(source){
   for(const raw of lines){
     const line = raw;
 
-    // Bloques de código ```
     if(/^\s*```/.test(line)){
       if(!inCode){ closeList(); inCode = true; codeBuf = []; }
       else {
@@ -1658,7 +1646,6 @@ document.getElementById('teamName').addEventListener('input', ()=>{
 editor.addEventListener('input', ()=>{ exportMarkdown(); updateCharCounter(); });
 document.getElementById('editorOverlay').addEventListener('click', onOverlayClick);
 
-/* Cerrar modales con Escape */
 document.addEventListener('keydown', e=>{
   if(e.key === "Escape"){
     if(document.getElementById('linkModal').classList.contains('show')) closeLinkModal();
@@ -1674,4 +1661,4 @@ window.addEventListener('DOMContentLoaded', ()=>{
 });
 </script>
 </body>
-</html>      
+</html>
