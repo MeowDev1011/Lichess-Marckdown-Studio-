@@ -90,7 +90,7 @@ button.heading-btn{padding:6px 10px;font-family:var(--mono);font-weight:700;
   font-size:.78rem;letter-spacing:.02em;}
 .icon{width:16px;height:16px;flex-shrink:0;}
 
-select,input[type=text],textarea{font-family:inherit;font-size:.88rem;
+select,input[type=text],input[type=number],textarea{font-family:inherit;font-size:.88rem;
   padding:8px 11px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);
   background:var(--surface);color:var(--fg);width:100%;
   transition:border-color .15s,box-shadow .15s;}
@@ -159,6 +159,11 @@ label .req{color:var(--red);margin-left:3px;}
   font-family:var(--mono);font-size:.85rem;white-space:pre-wrap;overflow-x:auto;color:var(--fg);}
 #bioEditor img{max-width:100%;height:auto;border-radius:6px;margin:.4em 0;display:block;}
 #bioEditor a{color:var(--accent);text-decoration:underline;}
+#bioEditor table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.9rem;}
+#bioEditor table th,#bioEditor table td{border:1px solid var(--border-strong);
+  padding:6px 10px;text-align:left;}
+#bioEditor table th{background:var(--surface-2);font-weight:600;}
+#bioEditor hr{border:none;border-top:1px solid var(--border-strong);margin:1em 0;}
 
 .editor-overlay{position:absolute;inset:0;display:none;align-items:center;
   justify-content:center;background:rgba(247,249,252,.5);backdrop-filter:blur(2px);
@@ -226,6 +231,10 @@ label .req{color:var(--red);margin-left:3px;}
 .rendered b,.rendered strong{font-weight:700;}
 .rendered i,.rendered em{font-style:italic;}
 .rendered img{max-width:100%;height:auto;border-radius:6px;margin:.4em 0;display:block;}
+.rendered table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.9rem;}
+.rendered table th,.rendered table td{border:1px solid var(--border-strong);
+  padding:6px 10px;text-align:left;}
+.rendered table th{background:var(--surface-2);font-weight:600;}
 
 .faq{background:var(--surface);border:1px solid var(--border);
   border-radius:var(--radius);margin:8px 0;overflow:hidden;
@@ -313,6 +322,10 @@ label .req{color:var(--red);margin-left:3px;}
 .md-render pre{margin:0;background:var(--surface-2);padding:3px 8px;
   border:1px solid var(--border);border-radius:4px;
   font-family:var(--mono);font-size:.78rem;display:inline-block;}
+.md-render table{border-collapse:collapse;font-size:.78rem;}
+.md-render table th,.md-render table td{border:1px solid var(--border-strong);
+  padding:2px 6px;text-align:left;}
+.md-render table th{background:var(--surface-2);font-weight:600;}
 
 .md-info{margin-top:22px;padding-top:16px;border-top:1px solid var(--border);}
 .md-info h4{font-size:.82rem;font-weight:700;letter-spacing:.03em;
@@ -356,6 +369,7 @@ footer .footer-credit a:hover{text-decoration:underline;}
   border-radius:6px;font-size:1.2rem;line-height:1;justify-content:center;
   color:var(--muted);border:none;background:transparent;}
 .modal-close:hover{background:var(--surface-2);color:var(--fg);}
+.modal-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
 .toast{position:fixed;bottom:24px;left:50%;
   transform:translateX(-50%) translateY(80px);
@@ -413,6 +427,8 @@ footer .footer-credit a:hover{text-decoration:underline;}
     <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
     <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
     <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="4" x2="9" y2="20"/></symbol>
+    <symbol id="i-divider" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="6" y1="6" x2="18" y2="6"/><line x1="6" y1="18" x2="18" y2="18"/></symbol>
   </defs>
 </svg>
 
@@ -446,7 +462,7 @@ footer .footer-credit a:hover{text-decoration:underline;}
 
 <main>
   <h1 data-i18n="h1">Team biography editor for Lichess</h1>
-  <p class="lead" data-i18n="lead">Write your team bio. Insert emojis, links, images and code blocks; on export they become markdown.</p>
+  <p class="lead" data-i18n="lead">Write your team bio. Insert emojis, links, images, tables and code blocks; on export they become markdown.</p>
 
   <h2 data-i18n="editorTitle">Editor</h2>
 
@@ -475,6 +491,8 @@ footer .footer-credit a:hover{text-decoration:underline;}
         <button type="button" class="icon-only" id="linkBtn" title="Insert link"><svg class="icon"><use href="#i-link"/></svg></button>
         <button type="button" class="icon-only" id="imageBtn" title="Insert image"><svg class="icon"><use href="#i-image"/></svg></button>
         <button type="button" class="icon-only" data-block="pre" title="Code block"><svg class="icon"><use href="#i-code"/></svg></button>
+        <button type="button" class="icon-only" id="tableBtn" title="Insert table"><svg class="icon"><use href="#i-table"/></svg></button>
+        <button type="button" class="icon-only" id="dividerBtn" title="Insert divider"><svg class="icon"><use href="#i-divider"/></svg></button>
       </div>
       <div id="bioEditor" contenteditable="true" spellcheck="false">
         <h2>Team description</h2>
@@ -577,22 +595,25 @@ footer .footer-credit a:hover{text-decoration:underline;}
 
   <h2 data-i18n="testTitle">Preview area</h2>
   <div class="card">
-    <p class="muted" data-i18n="testHint">Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.</p>
+    <p class="muted" data-i18n="testHint">Paste a bio with markdown (##, **bold**, lists, tables…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.</p>
     <label data-i18n="labelPreviewInput">Bio source (markdown + entities)</label>
-    <textarea id="previewIn" rows="10">## Team description
+    <textarea id="previewIn" rows="14">## Team description
 
 We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
 
-### Rules
+##### Small note
 
 - Play fair.
 - Respect everyone.
 
-[Visit Lichess](https://lichess.org)
+| Player | Rating |
+| ------ | ------ |
+| Alice  | 2100   |
+| Bob    | 1950   |
 
----
+***
 
-**Join us!**</textarea>
+[Visit Lichess](https://lichess.org)</textarea>
     <label style="margin-top:20px" data-i18n="labelPreviewRender">Rendered preview</label>
     <div class="rendered" id="previewOut"></div>
   </div>
@@ -674,11 +695,12 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
             <tr><td data-i18n="mdBoldItalic">Bold + Italic</td><td><code>***Text***</code></td><td><span class="md-render"><b><i>Text</i></b></span></td></tr>
             <tr><td data-i18n="mdUl">Bullet list</td><td><code>- Item</code></td><td><span class="md-render"><ul><li>Item</li></ul></span></td></tr>
             <tr><td data-i18n="mdOl">Numbered list</td><td><code>1. Item</code></td><td><span class="md-render"><ol><li>Item</li></ol></span></td></tr>
+            <tr><td data-i18n="mdTable">Table</td><td><code>| A | B |</code></td><td><span class="md-render"><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table></span></td></tr>
             <tr><td data-i18n="mdLink">Link</td><td><code>[Text](url)</code></td><td><span class="md-render"><a href="#top">Text</a></span></td></tr>
             <tr><td data-i18n="mdImage">Image</td><td><code>![alt](url)</code></td><td><span class="md-render"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20'%3E%3Crect width='40' height='20' fill='%23cbd5e1'/%3E%3C/svg%3E" alt="alt" style="max-width:40px;height:20px;border-radius:4px;display:inline-block;vertical-align:middle"></span></td></tr>
             <tr><td data-i18n="mdCode">Inline code</td><td><code>`code`</code></td><td><span class="md-render"><code>code</code></span></td></tr>
             <tr><td data-i18n="mdCodeBlock">Code block</td><td><code>``` code ```</code></td><td><span class="md-render"><pre><code>code</code></pre></span></td></tr>
-            <tr><td data-i18n="mdHr">Divider</td><td><code>---</code></td><td><span class="md-render"><hr></span></td></tr>
+            <tr><td data-i18n="mdHr">Divider</td><td><code>---</code> or <code>***</code></td><td><span class="md-render"><hr></span></td></tr>
             <tr><td data-i18n="mdEmoji">Emoji</td><td><code>&amp;#128512;</code></td><td><span class="md-render">&#128512;</span></td></tr>
           </tbody>
         </table>
@@ -758,20 +780,47 @@ We are a **friendly** club for _classical_ and blitz players. &#128512; &#9823;
   </div>
 </div>
 
+<!-- MODAL TABLA -->
+<div class="modal" id="tableModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <svg class="icon"><use href="#i-table"/></svg>
+      <span data-i18n="tableModalTitle">Insert table</span>
+      <button type="button" class="modal-close" onclick="closeTableModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-inputs">
+      <div>
+        <label for="tableRowsInput" data-i18n="tableRowsLabel">Rows</label>
+        <input type="number" id="tableRowsInput" min="1" max="20" value="3">
+      </div>
+      <div>
+        <label for="tableColsInput" data-i18n="tableColsLabel">Columns</label>
+        <input type="number" id="tableColsInput" min="1" max="10" value="2">
+      </div>
+    </div>
+    <p class="muted" style="margin-top:10px;font-size:.78rem" data-i18n="tableHint">The first row will be the header.</p>
+    <div class="row" style="margin-top:18px;justify-content:flex-end;">
+      <button type="button" onclick="closeTableModal()" data-i18n="tableCancel">Cancel</button>
+      <button type="button" class="primary" onclick="confirmTable()">
+        <svg class="icon"><use href="#i-check"/></svg>
+        <span data-i18n="tableConfirm">Insert table</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="imageInput" accept="image/*" style="display:none">
 <div class="toast" id="toast"></div>
 
 <script>
 const LIMITS = { teamNameMin:3, teamNameMax:30, bioMin:30, bioMax:2000 };
-
-/* URL del Worker de Cloudflare (aquí vive tu token de ImgBB) */
 const UPLOAD_URL = "https://imgbb-uploader.cuentalichess89.workers.dev/";
 
 const I18N = {
   en:{
     brand:"Lichess Markdown Studio", brandSub:"Team bio · Markdown",
     h1:"Team biography editor for Lichess",
-    lead:"Write your team bio. Insert emojis, links, images and code blocks; on export they become markdown.",
+    lead:"Write your team bio. Insert emojis, links, images, tables and code blocks; on export they become markdown.",
     editorTitle:"Editor", labelTeamName:"Team name", labelBio:"Biography",
     teamHint:"Required. Between 3 and 30 characters.",
     teamHintMin:"Minimum 3 characters.", teamHintMax:"Maximum 30 characters.",
@@ -782,7 +831,7 @@ const I18N = {
     btnToDec:"To HTML entity", btnToEmoji:"To emoji", labelOut:"Output",
     btnCopy:"Copy", btnClearAll:"Clear",
     testTitle:"Preview area",
-    testHint:"Paste a bio with markdown (##, **bold**, lists…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.",
+    testHint:"Paste a bio with markdown (##, **bold**, lists, tables…) and HTML entities (&#128512;) — it renders live below as Lichess would show it.",
     labelPreviewInput:"Bio source (markdown + entities)",
     labelPreviewRender:"Rendered preview",
     faqTitle:"FAQ", faqHint:"Common questions about the tool and about how Lichess handles markdown and emojis.",
@@ -799,7 +848,8 @@ const I18N = {
     mdName:"Name", mdSyntax:"Markdown", mdRenders:"Renders as",
     mdH2:"Heading 2", mdH3:"Heading 3", mdH4:"Heading 4", mdH5:"Heading 5", mdH6:"Heading 6",
     mdBold:"Bold", mdItalic:"Italic", mdBoldItalic:"Bold + Italic",
-    mdUl:"Bullet list", mdOl:"Numbered list", mdLink:"Link", mdImage:"Image",
+    mdUl:"Bullet list", mdOl:"Numbered list", mdTable:"Table",
+    mdLink:"Link", mdImage:"Image",
     mdCode:"Inline code", mdCodeBlock:"Code block", mdEmoji:"Emoji", mdHr:"Divider",
     mdWhatTitle:"What is markdown?",
     mdWhatBody:"Markdown is a lightweight markup language that lets you format plain text using simple characters. Instead of clicking buttons, you type symbols: ## makes a heading, **text** makes it bold, - starts a list. The text stays readable on its own, and any app that understands markdown turns it into formatted HTML.",
@@ -829,12 +879,18 @@ const I18N = {
     imageSelect:"Please select an image file.",
     imageUploading:"Uploading image…",
     imageUploaded:"Image uploaded and inserted!",
-    imageError:"Image upload failed. Please try again."
+    imageError:"Image upload failed. Please try again.",
+    tableModalTitle:"Insert table",
+    tableRowsLabel:"Rows (including header)",
+    tableColsLabel:"Columns",
+    tableHint:"The first row will be the header.",
+    tableCancel:"Cancel",
+    tableConfirm:"Insert table"
   },
   es:{
     brand:"Lichess Markdown Studio", brandSub:"Bio de equipo · Markdown",
     h1:"Editor de biografías de equipos para Lichess",
-    lead:"Escribe la biografía del equipo. Inserta emojis, enlaces, imágenes y bloques de código; al exportar se vuelven markdown.",
+    lead:"Escribe la biografía del equipo. Inserta emojis, enlaces, imágenes, tablas y bloques de código; al exportar se vuelven markdown.",
     editorTitle:"Editor", labelTeamName:"Nombre del equipo", labelBio:"Biografía",
     teamHint:"Obligatorio. Entre 3 y 30 caracteres.",
     teamHintMin:"Mínimo 3 caracteres.", teamHintMax:"Máximo 30 caracteres.",
@@ -845,7 +901,7 @@ const I18N = {
     btnToDec:"A entidad HTML", btnToEmoji:"A emoji", labelOut:"Resultado",
     btnCopy:"Copiar", btnClearAll:"Limpiar",
     testTitle:"Zona de vista previa",
-    testHint:"Pega una bio con markdown (##, **negrita**, listas…) y entidades HTML (&#128512;) — se renderiza abajo tal como la mostraría Lichess.",
+    testHint:"Pega una bio con markdown (##, **negrita**, listas, tablas…) y entidades HTML (&#128512;) — se renderiza abajo tal como la mostraría Lichess.",
     labelPreviewInput:"Bio de origen (markdown + entidades)",
     labelPreviewRender:"Vista previa renderizada",
     faqTitle:"Preguntas frecuentes", faqHint:"Preguntas comunes sobre la herramienta y sobre cómo Lichess maneja markdown y emojis.",
@@ -862,7 +918,8 @@ const I18N = {
     mdName:"Nombre", mdSyntax:"Markdown", mdRenders:"Se ve como",
     mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
     mdBold:"Negrita", mdItalic:"Cursiva", mdBoldItalic:"Negrita + cursiva",
-    mdUl:"Lista con viñetas", mdOl:"Lista numerada", mdLink:"Enlace", mdImage:"Imagen",
+    mdUl:"Lista con viñetas", mdOl:"Lista numerada", mdTable:"Tabla",
+    mdLink:"Enlace", mdImage:"Imagen",
     mdCode:"Código en línea", mdCodeBlock:"Bloque de código", mdEmoji:"Emoji", mdHr:"Divisor",
     mdWhatTitle:"¿Qué es markdown?",
     mdWhatBody:"Markdown es un lenguaje de marcado ligero que permite dar formato a texto plano usando caracteres simples. En vez de pulsar botones, escribes símbolos: ## crea un título, **texto** lo pone en negrita, - empieza una lista. El texto se sigue leyendo tal cual, y cualquier aplicación que entienda markdown lo transforma en HTML con formato.",
@@ -892,12 +949,18 @@ const I18N = {
     imageSelect:"Selecciona una imagen.",
     imageUploading:"Subiendo imagen…",
     imageUploaded:"¡Imagen subida e insertada!",
-    imageError:"La subida falló. Inténtalo de nuevo."
+    imageError:"La subida falló. Inténtalo de nuevo.",
+    tableModalTitle:"Insertar tabla",
+    tableRowsLabel:"Filas (incluyendo cabecera)",
+    tableColsLabel:"Columnas",
+    tableHint:"La primera fila será la cabecera.",
+    tableCancel:"Cancelar",
+    tableConfirm:"Insertar tabla"
   },
   fr:{
     brand:"Lichess Markdown Studio", brandSub:"Bio d'équipe · Markdown",
     h1:"Éditeur de biographies d'équipes pour Lichess",
-    lead:"Écrivez la biographie de l'équipe. Insérez emojis, liens, images et blocs de code ; à l'export ils deviennent du markdown.",
+    lead:"Écrivez la biographie de l'équipe. Insérez emojis, liens, images, tableaux et blocs de code ; à l'export ils deviennent du markdown.",
     editorTitle:"Éditeur", labelTeamName:"Nom de l'équipe", labelBio:"Biographie",
     teamHint:"Requis. Entre 3 et 30 caractères.",
     teamHintMin:"Minimum 3 caractères.", teamHintMax:"Maximum 30 caractères.",
@@ -908,7 +971,7 @@ const I18N = {
     btnToDec:"Vers entité HTML", btnToEmoji:"Vers emoji", labelOut:"Résultat",
     btnCopy:"Copier", btnClearAll:"Effacer",
     testTitle:"Zone d'aperçu",
-    testHint:"Collez une bio avec du markdown (##, **gras**, listes…) et des entités HTML (&#128512;) — le rendu s'affiche en dessous comme sur Lichess.",
+    testHint:"Collez une bio avec du markdown (##, **gras**, listes, tableaux…) et des entités HTML (&#128512;) — le rendu s'affiche en dessous comme sur Lichess.",
     labelPreviewInput:"Bio source (markdown + entités)",
     labelPreviewRender:"Aperçu rendu",
     faqTitle:"FAQ", faqHint:"Questions courantes sur l'outil et sur la façon dont Lichess gère le markdown et les emojis.",
@@ -925,7 +988,8 @@ const I18N = {
     mdName:"Nom", mdSyntax:"Markdown", mdRenders:"Rendu",
     mdH2:"Titre 2", mdH3:"Titre 3", mdH4:"Titre 4", mdH5:"Titre 5", mdH6:"Titre 6",
     mdBold:"Gras", mdItalic:"Italique", mdBoldItalic:"Gras + italique",
-    mdUl:"Liste à puces", mdOl:"Liste numérotée", mdLink:"Lien", mdImage:"Image",
+    mdUl:"Liste à puces", mdOl:"Liste numérotée", mdTable:"Tableau",
+    mdLink:"Lien", mdImage:"Image",
     mdCode:"Code en ligne", mdCodeBlock:"Bloc de code", mdEmoji:"Emoji", mdHr:"Séparateur",
     mdWhatTitle:"Qu'est-ce que le markdown ?",
     mdWhatBody:"Le markdown est un langage de balisage léger qui permet de mettre en forme du texte brut avec des caractères simples. Au lieu de cliquer sur des boutons, vous tapez des symboles : ## crée un titre, **texte** le met en gras, - commence une liste. Le texte reste lisible tel quel, et toute application qui comprend le markdown le transforme en HTML mis en forme.",
@@ -955,12 +1019,18 @@ const I18N = {
     imageSelect:"Veuillez sélectionner une image.",
     imageUploading:"Téléversement en cours…",
     imageUploaded:"Image téléversée et insérée !",
-    imageError:"Le téléversement a échoué. Réessayez."
+    imageError:"Le téléversement a échoué. Réessayez.",
+    tableModalTitle:"Insérer un tableau",
+    tableRowsLabel:"Lignes (avec en-tête)",
+    tableColsLabel:"Colonnes",
+    tableHint:"La première ligne sera l'en-tête.",
+    tableCancel:"Annuler",
+    tableConfirm:"Insérer le tableau"
   },
   de:{
     brand:"Lichess Markdown Studio", brandSub:"Team-Bio · Markdown",
     h1:"Team-Biografie-Editor für Lichess",
-    lead:"Schreibe die Team-Biografie. Füge Emojis, Links, Bilder und Codeblöcke ein; beim Export werden sie zu Markdown.",
+    lead:"Schreibe die Team-Biografie. Füge Emojis, Links, Bilder, Tabellen und Codeblöcke ein; beim Export werden sie zu Markdown.",
     editorTitle:"Editor", labelTeamName:"Teamname", labelBio:"Biografie",
     teamHint:"Erforderlich. Zwischen 3 und 30 Zeichen.",
     teamHintMin:"Mindestens 3 Zeichen.", teamHintMax:"Maximal 30 Zeichen.",
@@ -971,7 +1041,7 @@ const I18N = {
     btnToDec:"Zu HTML-Entity", btnToEmoji:"Zu Emoji", labelOut:"Ausgabe",
     btnCopy:"Kopieren", btnClearAll:"Leeren",
     testTitle:"Vorschaubereich",
-    testHint:"Füge eine Bio mit Markdown (##, **fett**, Listen…) und HTML-Entities (&#128512;) ein — sie wird unten so gerendert, wie Lichess sie anzeigt.",
+    testHint:"Füge eine Bio mit Markdown (##, **fett**, Listen, Tabellen…) und HTML-Entities (&#128512;) ein — sie wird unten so gerendert, wie Lichess sie anzeigt.",
     labelPreviewInput:"Bio-Quelle (Markdown + Entities)",
     labelPreviewRender:"Gerenderte Vorschau",
     faqTitle:"FAQ", faqHint:"Häufige Fragen zum Tool und dazu, wie Lichess mit Markdown und Emojis umgeht.",
@@ -988,7 +1058,8 @@ const I18N = {
     mdName:"Name", mdSyntax:"Markdown", mdRenders:"Erscheint als",
     mdH2:"Überschrift 2", mdH3:"Überschrift 3", mdH4:"Überschrift 4", mdH5:"Überschrift 5", mdH6:"Überschrift 6",
     mdBold:"Fett", mdItalic:"Kursiv", mdBoldItalic:"Fett + Kursiv",
-    mdUl:"Aufzählung", mdOl:"Nummerierte Liste", mdLink:"Link", mdImage:"Bild",
+    mdUl:"Aufzählung", mdOl:"Nummerierte Liste", mdTable:"Tabelle",
+    mdLink:"Link", mdImage:"Bild",
     mdCode:"Inline-Code", mdCodeBlock:"Codeblock", mdEmoji:"Emoji", mdHr:"Trennlinie",
     mdWhatTitle:"Was ist Markdown?",
     mdWhatBody:"Markdown ist eine leichte Auszeichnungssprache, mit der man reinen Text über einfache Zeichen formatieren kann. Statt auf Schaltflächen zu klicken, tippt man Symbole: ## erzeugt eine Überschrift, **Text** macht ihn fett, - beginnt eine Liste. Der Text bleibt für sich lesbar, und jede App, die Markdown versteht, wandelt ihn in formatiertes HTML um.",
@@ -1018,12 +1089,18 @@ const I18N = {
     imageSelect:"Bitte ein Bild auswählen.",
     imageUploading:"Bild wird hochgeladen…",
     imageUploaded:"Bild hochgeladen und eingefügt!",
-    imageError:"Hochladen fehlgeschlagen. Bitte erneut versuchen."
+    imageError:"Hochladen fehlgeschlagen. Bitte erneut versuchen.",
+    tableModalTitle:"Tabelle einfügen",
+    tableRowsLabel:"Zeilen (inkl. Kopfzeile)",
+    tableColsLabel:"Spalten",
+    tableHint:"Die erste Zeile wird die Kopfzeile.",
+    tableCancel:"Abbrechen",
+    tableConfirm:"Tabelle einfügen"
   },
   pt:{
     brand:"Lichess Markdown Studio", brandSub:"Bio de equipe · Markdown",
     h1:"Editor de biografias de equipes para Lichess",
-    lead:"Escreva a biografia da equipe. Insira emojis, links, imagens e blocos de código; ao exportar viram markdown.",
+    lead:"Escreva a biografia da equipe. Insira emojis, links, imagens, tabelas e blocos de código; ao exportar viram markdown.",
     editorTitle:"Editor", labelTeamName:"Nome da equipe", labelBio:"Biografia",
     teamHint:"Obrigatório. Entre 3 e 30 caracteres.",
     teamHintMin:"Mínimo 3 caracteres.", teamHintMax:"Máximo 30 caracteres.",
@@ -1034,7 +1111,7 @@ const I18N = {
     btnToDec:"Para entidade HTML", btnToEmoji:"Para emoji", labelOut:"Resultado",
     btnCopy:"Copiar", btnClearAll:"Limpar",
     testTitle:"Área de pré-visualização",
-    testHint:"Cole uma bio com markdown (##, **negrito**, listas…) e entidades HTML (&#128512;) — renderiza abaixo como o Lichess mostraria.",
+    testHint:"Cole uma bio com markdown (##, **negrito**, listas, tabelas…) e entidades HTML (&#128512;) — renderiza abaixo como o Lichess mostraria.",
     labelPreviewInput:"Bio fonte (markdown + entidades)",
     labelPreviewRender:"Pré-visualização renderizada",
     faqTitle:"Perguntas frequentes", faqHint:"Perguntas comuns sobre a ferramenta e sobre como o Lichess lida com markdown e emojis.",
@@ -1051,7 +1128,8 @@ const I18N = {
     mdName:"Nome", mdSyntax:"Markdown", mdRenders:"Aparece como",
     mdH2:"Título 2", mdH3:"Título 3", mdH4:"Título 4", mdH5:"Título 5", mdH6:"Título 6",
     mdBold:"Negrito", mdItalic:"Itálico", mdBoldItalic:"Negrito + itálico",
-    mdUl:"Lista com marcadores", mdOl:"Lista numerada", mdLink:"Link", mdImage:"Imagem",
+    mdUl:"Lista com marcadores", mdOl:"Lista numerada", mdTable:"Tabela",
+    mdLink:"Link", mdImage:"Imagem",
     mdCode:"Código em linha", mdCodeBlock:"Bloco de código", mdEmoji:"Emoji", mdHr:"Divisor",
     mdWhatTitle:"O que é markdown?",
     mdWhatBody:"Markdown é uma linguagem de marcação leve que permite formatar texto simples usando caracteres simples. Em vez de clicar em botões, você digita símbolos: ## cria um título, **texto** deixa em negrito, - inicia uma lista. O texto continua legível por si só, e qualquer aplicativo que entenda markdown o transforma em HTML formatado.",
@@ -1081,7 +1159,13 @@ const I18N = {
     imageSelect:"Selecione uma imagem.",
     imageUploading:"Enviando imagem…",
     imageUploaded:"Imagem enviada e inserida!",
-    imageError:"Falha no envio. Tente novamente."
+    imageError:"Falha no envio. Tente novamente.",
+    tableModalTitle:"Inserir tabela",
+    tableRowsLabel:"Linhas (incluindo cabeçalho)",
+    tableColsLabel:"Colunas",
+    tableHint:"A primeira linha será o cabeçalho.",
+    tableCancel:"Cancelar",
+    tableConfirm:"Inserir tabela"
   }
 };
 
@@ -1093,7 +1177,6 @@ let editorUnlocked = false;
 let savedRange = null;
 let pendingImageUrl = "";
 
-/* ---------- i18n ---------- */
 function applyLang(lang){
   if(!SUPPORTED.includes(lang)) lang = "en";
   currentLang = lang;
@@ -1141,7 +1224,6 @@ function applyTheme(theme){
   updateLogo(theme);
 }
 
-/* ---------- Validación ---------- */
 function validateTeamName(showError){
   const input = document.getElementById('teamName');
   const hint = document.getElementById('teamHint');
@@ -1205,13 +1287,11 @@ function onOverlayClick(){
   setTimeout(()=>input.classList.remove('field-highlight'), 1600);
 }
 
-/* ---------- Editor ---------- */
 const editor = document.getElementById('bioEditor');
 
 document.getElementById('toolbar').addEventListener('mousedown', e=>{
   if(e.target.closest('button')) e.preventDefault();
 });
-
 document.querySelectorAll('.toolbar button[data-cmd]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(!editorUnlocked) return;
@@ -1247,7 +1327,15 @@ document.getElementById('boldItalicBtn').addEventListener('click', ()=>{
   exportMarkdown(); updateCharCounter();
 });
 
-/* ---------- Modal Enlace ---------- */
+/* Divider */
+document.getElementById('dividerBtn').addEventListener('click', ()=>{
+  if(!editorUnlocked) return;
+  editor.focus();
+  document.execCommand('insertHTML', false, '<hr><p><br></p>');
+  exportMarkdown(); updateCharCounter();
+});
+
+/* Modal Enlace */
 function openLinkModal(){
   if(!editorUnlocked) return;
   const sel = window.getSelection();
@@ -1281,7 +1369,50 @@ function confirmLink(){
 }
 document.getElementById('linkBtn').addEventListener('click', openLinkModal);
 
-/* ---------- Subida de imagen (vía Worker Cloudflare → ImgBB) ---------- */
+/* Modal Tabla */
+function openTableModal(){
+  if(!editorUnlocked) return;
+  const sel = window.getSelection();
+  savedRange = (sel.rangeCount) ? sel.getRangeAt(0).cloneRange() : null;
+  document.getElementById('tableRowsInput').value = 3;
+  document.getElementById('tableColsInput').value = 2;
+  document.getElementById('tableModal').classList.add('show');
+  setTimeout(()=>document.getElementById('tableRowsInput').focus(), 50);
+}
+function closeTableModal(){
+  document.getElementById('tableModal').classList.remove('show');
+  savedRange = null;
+}
+function confirmTable(){
+  const rows = Math.max(1, Math.min(20, parseInt(document.getElementById('tableRowsInput').value, 10) || 1));
+  const cols = Math.max(1, Math.min(10, parseInt(document.getElementById('tableColsInput').value, 10) || 1));
+
+  let html = '<table><thead><tr>';
+  for(let c = 0; c < cols; c++){
+    html += '<th>Header ' + (c+1) + '</th>';
+  }
+  html += '</tr></thead><tbody>';
+  for(let r = 1; r < rows; r++){
+    html += '<tr>';
+    for(let c = 0; c < cols; c++){
+      html += '<td>Cell</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table><p><br></p>';
+
+  editor.focus();
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  if(savedRange) sel.addRange(savedRange);
+  document.execCommand('insertHTML', false, html);
+
+  closeTableModal();
+  exportMarkdown(); updateCharCounter();
+}
+document.getElementById('tableBtn').addEventListener('click', openTableModal);
+
+/* Subida de imagen vía Worker */
 const imageInput = document.getElementById('imageInput');
 
 document.getElementById('imageBtn').addEventListener('click', ()=>{
@@ -1303,20 +1434,14 @@ imageInput.addEventListener('change', async e=>{
     const fd = new FormData();
     fd.append('image', file);
 
-    const res = await fetch(UPLOAD_URL, {
-      method: 'POST',
-      body: fd
-    });
-
+    const res = await fetch(UPLOAD_URL, { method: 'POST', body: fd });
     const data = await res.json();
     if(!data.url) throw new Error('Upload failed');
 
     pendingImageUrl = data.url;
-
     document.getElementById('imageAltInput').value = "";
     document.getElementById('imageModal').classList.add('show');
     setTimeout(()=>document.getElementById('imageAltInput').focus(), 50);
-
   } catch(err){
     console.error(err);
     showToast(I18N[currentLang].imageError);
@@ -1346,7 +1471,7 @@ function confirmImageAlt(){
   showToast(dict.imageUploaded);
 }
 
-/* ---------- Markdown export ---------- */
+/* Markdown export */
 function isEmojiCodePoint(cp){
   if(cp === 0xFE0F || cp === 0x200D) return true;
   if(cp >= 0x1F300 && cp <= 0x1FAFF) return true;
@@ -1365,10 +1490,33 @@ function emojiToDecimalString(text){
   }
   return out;
 }
+function tableToMarkdown(tableNode){
+  const rows = [];
+  tableNode.querySelectorAll('tr').forEach(tr => {
+    const cells = [];
+    tr.querySelectorAll('th, td').forEach(cell => {
+      cells.push(Array.from(cell.childNodes).map(nodeToMarkdown).join("").trim() || " ");
+    });
+    rows.push(cells);
+  });
+  if(rows.length === 0) return "";
+  const headerRow = rows[0];
+  const dataRows = rows.slice(1);
+  let md = "\n| " + headerRow.join(" | ") + " |\n";
+  md += "| " + headerRow.map(() => "---").join(" | ") + " |\n";
+  for(const row of dataRows){
+    md += "| " + row.join(" | ") + " |\n";
+  }
+  return md + "\n";
+}
 function nodeToMarkdown(node){
   if(node.nodeType === 3) return emojiToDecimalString(node.textContent);
   if(node.nodeType !== 1) return "";
   const tag = node.tagName.toLowerCase();
+
+  if(tag === "table") return tableToMarkdown(node);
+  if(tag === "hr") return "\n---\n";
+
   const inner = Array.from(node.childNodes).map(nodeToMarkdown).join("");
   switch(tag){
     case "b": case "strong": return "**" + inner + "**";
@@ -1481,7 +1629,7 @@ function loadExample(){
   exportMarkdown(); updateCharCounter();
 }
 
-/* ---------- Conversor ---------- */
+/* Conversor */
 function emojiToDecimal(){
   const input = document.getElementById('emojiIn').value;
   const out = [];
@@ -1524,7 +1672,7 @@ function fallbackCopy(txt, msg){
   showToast(msg);
 }
 
-/* ---------- Preview ---------- */
+/* Preview */
 function escapeHTML(s){
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -1544,6 +1692,15 @@ function inlineMarkdown(s){
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   return s;
 }
+function isTableSeparator(line){
+  return /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$/.test(line);
+}
+function isTableRow(line){
+  return line.includes("|") && line.trim().startsWith("|");
+}
+function parseTableRow(line){
+  return line.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim());
+}
 function renderBio(source){
   if(!source || source.trim() === "") return "";
   let s = escapeHTML(source);
@@ -1559,9 +1716,10 @@ function renderBio(source){
     if(listOpen){ out.push("</" + listOpen + ">"); listOpen = null; }
   };
 
-  for(const raw of lines){
-    const line = raw;
+  for(let i = 0; i < lines.length; i++){
+    const line = lines[i];
 
+    // Bloques de código ```
     if(/^\s*```/.test(line)){
       if(!inCode){ closeList(); inCode = true; codeBuf = []; }
       else {
@@ -1572,6 +1730,39 @@ function renderBio(source){
     }
     if(inCode){ codeBuf.push(line); continue; }
 
+    // Tabla: fila + separador
+    if(isTableRow(line) && i+1 < lines.length && isTableSeparator(lines[i+1])){
+      closeList();
+      const header = parseTableRow(line);
+      const rows = [];
+      let j = i + 2;
+      while(j < lines.length && isTableRow(lines[j]) && !isTableSeparator(lines[j])){
+        rows.push(parseTableRow(lines[j]));
+        j++;
+      }
+      let tableHtml = "<table><thead><tr>";
+      for(const h of header) tableHtml += "<th>" + inlineMarkdown(h) + "</th>";
+      tableHtml += "</tr></thead><tbody>";
+      for(const r of rows){
+        tableHtml += "<tr>";
+        for(let c = 0; c < header.length; c++){
+          tableHtml += "<td>" + inlineMarkdown(r[c] || "") + "</td>";
+        }
+        tableHtml += "</tr>";
+      }
+      tableHtml += "</tbody></table>";
+      out.push(tableHtml);
+      i = j - 1;
+      continue;
+    }
+
+    // Divisor: --- o ***
+    if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(line)){
+      closeList();
+      out.push("<hr>");
+      continue;
+    }
+
     let m;
     if(m = line.match(/^######\s+(.*)$/)){ closeList(); out.push("<h6>" + inlineMarkdown(m[1]) + "</h6>"); continue; }
     if(m = line.match(/^#####\s+(.*)$/)){ closeList(); out.push("<h5>" + inlineMarkdown(m[1]) + "</h5>"); continue; }
@@ -1579,7 +1770,7 @@ function renderBio(source){
     if(m = line.match(/^###\s+(.*)$/)){ closeList(); out.push("<h3>" + inlineMarkdown(m[1]) + "</h3>"); continue; }
     if(m = line.match(/^##\s+(.*)$/)){ closeList(); out.push("<h2>" + inlineMarkdown(m[1]) + "</h2>"); continue; }
     if(m = line.match(/^#\s+(.*)$/)){ closeList(); out.push("<h1>" + inlineMarkdown(m[1]) + "</h1>"); continue; }
-    if(/^\s*---+\s*$/.test(line)){ closeList(); out.push("<hr>"); continue; }
+
     if(m = line.match(/^\s*[-*]\s+(.*)$/)){
       if(listOpen !== "ul"){ closeList(); out.push("<ul>"); listOpen = "ul"; }
       out.push("<li>" + inlineMarkdown(m[1]) + "</li>");
@@ -1604,7 +1795,7 @@ function updatePreview(){
 }
 document.getElementById('previewIn').addEventListener('input', updatePreview);
 
-/* ---------- Toast ---------- */
+/* Toast */
 let toastTimer;
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -1613,7 +1804,7 @@ function showToast(msg){
   toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
 }
 
-/* ---------- Init ---------- */
+/* Init */
 const initialLang = detectBrowserLang();
 applyLang(initialLang);
 document.getElementById('langSelect').value = initialLang;
@@ -1650,6 +1841,7 @@ document.addEventListener('keydown', e=>{
   if(e.key === "Escape"){
     if(document.getElementById('linkModal').classList.contains('show')) closeLinkModal();
     if(document.getElementById('imageModal').classList.contains('show')) closeImageModal();
+    if(document.getElementById('tableModal').classList.contains('show')) closeTableModal();
   }
 });
 
